@@ -1,7 +1,7 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth, $ionicSwipeCardDelegate) {
- $http.defaults.headers.common.Authorization = 'Basic dGVzdHVzZXI6MTIzNA=='
+ //$http.defaults.headers.common.Authorization = 'Basic dGVzdHVzZXI6MTIzNA==';
  $scope.cards = [];
     $scope.cardTypes = {};
     $scope.cards.push($scope.cardTypes);
@@ -61,7 +61,8 @@ $scope.savefbinfo  = function() {
    $scope.modallogin.hide();
    var students;
    var absent = true;
-        $http.get('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]')
+        $http.get('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', {
+    headers: {'Authorization': 'Basic dGVzdHVzZXI6MTIzNA=='}})
         .success(function (data) {
           console.log(JSON.stringify(data.results[0].Students));
           console.log('Inspecting the data results', data);
@@ -87,7 +88,8 @@ $scope.savefbinfo  = function() {
            data.results[0].Students.push(tosend);
 
 
-             $http.put('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', data.results[0])
+             $http.put('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', data.results[0], {
+            headers: {'Authorization': 'Basic dGVzdHVzZXI6MTIzNA=='}})
             .success(function (data, status, headers, config) {
               console.log('saving data to customer', JSON.stringify(data), JSON.stringify(status));
             }).error(function (data, status, headers, config) {
@@ -115,11 +117,11 @@ $scope.savefbinfo  = function() {
   $scope.comment = function(comment) {
       var students;
 
-        $http.get('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]')
+        $http.get('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', {
+        headers: {'Authorization': 'Basic dGVzdHVzZXI6MTIzNA=='}})
         .success(function (data) {
           students = data.results[0].Students;
           console.log(JSON.stringify(data));
-          alert(data);
 
 
           for(var i = 0; i<students.length; i++) {
@@ -132,7 +134,8 @@ $scope.savefbinfo  = function() {
 
           data.results[0].Students = students;
 
-           $http.put('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', data.results[0])
+           $http.put('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', data.results[0], {
+            headers: {'Authorization': 'Basic dGVzdHVzZXI6MTIzNA=='}})
           .success(function (data, status, headers, config) {
             console.log('saving data to customer', JSON.stringify(data), JSON.stringify(status));
           }).error(function (data, status, headers, config) {
@@ -156,7 +159,16 @@ $scope.savefbinfo  = function() {
             });
         }
 
-
+        var sending = {};
+        
+      $http.post('http://gateway-a.watsonplatform.net/calls/text/TextGetTextSentiment?apikey=6dba745bbd9815883215760f648c975414379579&outputMode=json&text=' + comment)
+            .success(function (data, status, headers, config) {
+              console.log('IBM data', JSON.stringify(data.docSentiment)); 
+              $scope.sentiment = data.docSentiment;
+                          
+            }).error(function (data, status, headers, config) {
+              alert('Ibm error', JSON.stringify(data), JSON.stringify(status));
+            });
   }
 
    $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -169,7 +181,16 @@ $scope.savefbinfo  = function() {
 })
 
 
-.controller('CustomerCtrl', function($scope) {})
+.controller('CustomerCtrl', function($scope, $http) {
+
+  $scope.calling = function() {
+    var tosend = {
+      "text": "I am getting an error saying XMLHttpRequest cannot load [url] Response for preflight has invalid HTTP status code 400.I tried calling from a form and it appears to be working. I debug the service from inside Visual Studio and it worked just fine",
+    };
+            
+  }
+
+})
 
 .controller('DashCtrl', function($scope) {})
 

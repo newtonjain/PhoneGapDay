@@ -1,1 +1,10 @@
 /* Empty. Add your own CSS if you like */
+
+
+.danger {
+	background-color: red;
+}
+
+.green {
+	background-color: #19FF19;
+}
