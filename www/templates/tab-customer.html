@@ -1,0 +1,28 @@
+<ion-view view-title="Bookings">
+  <ion-content scroll="false">
+
+      <button class="button button-balanced button-block" >Use current location</button>
+
+   <!--        <swipe-cards>
+      <swipe-card ng-repeat="card in cards" on-card-swipe="cardSwiped($index)" id="start-card">
+        Swipe down for a new card -->
+        <div class="list list-inset">
+        <label class="item item-input">
+          <input type="text" placeholder="Enter your comments here" ng-model="student.comments">
+        </label>
+      </div>
+    
+      <div class="row">
+        <div class="col col-50">
+          <button class="button button-block" ng-class="{'button-balanced' : clicked && !adventurous}" ng-click="showMap = true; options('Economical'); clicked = !clicked">Understood</button>
+        </div>
+        <div class="col col-50">
+          <button class="button button-balanced button-block"  ng-class="{'button-assertive' : adventurous}" ng-click="showMap = true; options('Adventurous'); clicked2 = !clicked2">Still Confused</button>
+        </div>
+      </div>
+
+     <button class="button button-block" ng-click="comment(student.comments)">Submit</button>
+
+
+  </ion-content>
+</ion-view>

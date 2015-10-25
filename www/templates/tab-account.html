@@ -1,0 +1,83 @@
+<ion-view view-title="Account">
+
+    <ion-content>
+        
+        <div class="list card">
+
+            <center>
+                <h2>{{authData.displayName}}</h2>
+                <p><strong>Location: </strong>User's City</p>
+            </center>
+
+            <div class="item item-body">
+                <center>
+                    <img src="{{ authData.cover}}" style="width:50%" class="headshot menu-item">
+                    <p align="middle" style="width:50%">
+                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+                    </p>
+                </center>
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="row">
+                <div class="col col-50">
+                    <div class="item item-divider">
+                        <h2><center>Profile Details</center></h2>
+                    </div>        
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col col-50">
+                    <div class="list">
+                        <a href="#" class="item item-icon-left">
+                            <i class="icon ion-paintbrush"></i>
+                            Interests
+                            <span class="item-note">
+                                - motorcycles
+                                - biclying
+                                - rock climbing
+                            </span>
+                        </a>
+                        <a href="#" class="item item-icon-left">
+                            <i class="icon ion-home"></i>
+                            Munich, Germany
+                        </a>
+
+                        <a href="#" class="item item-icon-left">
+                            <i class="icon ion-ios-telephone"></i>
+                            +1 (647) 373 6170
+                        </a>
+                    </div>
+                </div>
+                <div class="col col-50">
+                    <div class="list">
+                        <a class="item item-icon-left item-icon-right" href="#">
+                            <i class="icon ion-thumbsup"></i>
+                                Preferences
+                            <span class="item-note">
+                                <h3>{{chats.length}}</h3>
+                            </span>
+                        </a>
+                        <a class="item item-icon-left item-icon-right" href="#">
+                            <i class="icon"></i>
+                                Risk Level
+                            <span class="badge badge-assertive">
+                                <h3>87% - Daredevil</h3>
+                            </span>
+                        </a>
+                        <a class="item item-icon-left item-icon-right" href="#">
+                            <i class="icon ion-happy-outline"></i>
+                                Customer Rating
+                            <span class="item-note">
+                                <h3>5.0 Star</h3>
+                            </span>
+                       </a>
+                   </div>                                         
+                </div>
+            </div>              
+        </div>
+    </ion-content>
+</ion-view>
