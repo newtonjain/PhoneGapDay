@@ -1,7 +1,7 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth, $ionicSwipeCardDelegate) {
-
+ $http.defaults.headers.common.Authorization = 'Basic dGVzdHVzZXI6MTIzNA=='
  $scope.cards = [];
     $scope.cardTypes = {};
     $scope.cards.push($scope.cardTypes);
@@ -59,17 +59,93 @@ ref.authWithOAuthPopup("facebook", function(error, authData) {
 
 $scope.savefbinfo  = function() {
    $scope.modallogin.hide();
+   var students;
+   var absent = true;
+        $http.get('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]')
+        .success(function (data) {
+          console.log(JSON.stringify(data.results[0].Students));
+          console.log('Inspecting the data results', data);
+          students = data.results[0].Students;
 
+          for(var i = 0; i<students.length; i++) {
+            if(students[i].name == $scope.authData.displayName) {
+              absent = false;
+              break;
+            }
+          }
+
+          if(absent == true){
+               var tosend = {
+                    "ID":  ($scope.authData.id).toString(),
+                     "name": $scope.authData.displayName,
+                     "Rating": "1",
+                      "email": $scope.authData.email,
+                     "Comments": ""
+
+               }
+
+           data.results[0].Students.push(tosend);
+
+
+             $http.put('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', data.results[0])
+            .success(function (data, status, headers, config) {
+              console.log('saving data to customer', JSON.stringify(data), JSON.stringify(status));
+            }).error(function (data, status, headers, config) {
+                console.log('There was a problem posting your information' + JSON.stringify(data) + JSON.stringify(status));
+            });
+
+
+          }
+
+        })
+        .error(function (data) {
+            alert("Error: " + JSON.stringify(data));
+        });
   }
 
   $scope.options = function (option) {
     $scope.option = option;
-    if(option === 'Economical'){
-         $scope.adventurous = false;
+    if(option === 'yes'){
+         $scope.option = '1';
     } else {
-        $scope.adventurous = true;
+        $scope.option = '0';
     }
-    console.log('the selection had been made', $scope.adventurous);
+  }
+
+  $scope.comment = function(comment) {
+      var students;
+
+        $http.get('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]')
+        .success(function (data) {
+          students = data.results[0].Students;
+          console.log(JSON.stringify(data));
+          alert(data);
+
+
+          for(var i = 0; i<students.length; i++) {
+            if(students[i].name == $scope.authData.displayName) {
+              students[i].Rating = $scope.option;
+              students[i].Comments = comment;
+              break;
+            }
+          }
+
+          data.results[0].Students = students;
+
+           $http.put('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', data.results[0])
+          .success(function (data, status, headers, config) {
+            console.log('saving data to customer', JSON.stringify(data), JSON.stringify(status));
+          }).error(function (data, status, headers, config) {
+              console.log('There was a problem posting your information' + JSON.stringify(data) + JSON.stringify(status));
+          });
+
+
+
+        })
+        .error(function (data) {
+            alert("Error: " + JSON.stringify(data));
+        });
+
 
   }
 
