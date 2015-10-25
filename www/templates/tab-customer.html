@@ -1,23 +1,23 @@
-<ion-view view-title="Bookings">
+<ion-view view-title="Feedback">
   <ion-content scroll="false">
 
-      <button class="button button-balanced button-block" >Use current location</button>
-
+      <button class="button button-royal button-block" >Rate the current topic</button>
+      <br>
    <!--        <swipe-cards>
       <swipe-card ng-repeat="card in cards" on-card-swipe="cardSwiped($index)" id="start-card">
         Swipe down for a new card -->
         <div class="list list-inset">
         <label class="item item-input">
-          <input type="text" placeholder="Enter your comments here" ng-model="student.comments">
+          <textarea type="text" placeholder="Enter your comments here" ng-model="student.comments"></textarea>
         </label>
       </div>
     
       <div class="row">
         <div class="col col-50">
-          <button class="button button-block" ng-class="{'button-balanced' : clicked && !adventurous}" ng-click="showMap = true; options('yes'); clicked = !clicked">Understood</button>
+          <button class="button button-block button-balanced icon-left ion-happy" ng-class="{'button-balanced' : clicked && !adventurous}" ng-click="showMap = true; options('yes'); clicked = !clicked">Understood</button>
         </div>
         <div class="col col-50">
-          <button class="button button-balanced button-block"  ng-class="{'button-assertive' : adventurous}" ng-click="showMap = true; options('no'); clicked2 = !clicked2">Still Confused</button>
+          <button class="button button-assertive button-block icon-right ion-sad"  ng-class="{'button-assertive' : option===0}" ng-click="showMap = true; options('no'); yelping(); clicked2 = !clicked2">Confused</button>
         </div>
       </div>
 

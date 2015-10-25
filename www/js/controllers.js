@@ -146,6 +146,16 @@ $scope.savefbinfo  = function() {
             alert("Error: " + JSON.stringify(data));
         });
 
+        if($scope.option == "0") {
+
+             $http.get('http://127.0.0.1:3111/no')
+            .success(function (data) {
+              console.log('success');
+            }).error(function (data) {
+                console.log('fail');
+            });
+        }
+
 
   }
 
