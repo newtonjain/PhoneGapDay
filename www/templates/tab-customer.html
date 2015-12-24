@@ -1,4 +1,4 @@
-<ion-view view-title="Feedback">
+<ion-view view-title="Feedback TIme">
   <ion-content scroll="false">
 
       <button class="button button-royal button-block" >Rate the current topic</button>
@@ -6,33 +6,49 @@
    <!--        <swipe-cards>
       <swipe-card ng-repeat="card in cards" on-card-swipe="cardSwiped($index)" id="start-card">
         Swipe down for a new card -->
-        <div class="list list-inset">
-        <label class="item item-input">
-          <textarea type="text" placeholder="Enter your comments here" ng-model="student.comments"></textarea>
-        </label>
-      </div>
-    
-      <div class="row">
+
+    <div class="card padding_vertical">
+     1) Would you like to learn more about TACO (Tools for Apache Cordova)? 
+    </div>
+    <div class="card padding_vertical">
+     2) Do you like VS Code?
+    </div>
+     <div class="card padding_vertical">
+     3) Would you like to learn more about Code Push?
+    </div>
+    <div class="card padding_vertical">
+     4) Did you like the presentation?
+    </div>
+    <div class="card padding_vertical">
+     5) How awesome is Microsoft Cordova team (there is only one right answer)?
+    </div>
+    <div class="list list-inset">
+      <label class="item item-input">
+        <textarea type="text" placeholder="Enter your comments here" ng-model="student.comments"></textarea>
+      </label>
+    </div>
+
+<!--       <div class="row">
         <div class="col col-50">
           <button class="button button-block button-balanced icon-left ion-happy" ng-class="{'button-balanced' : clicked && !adventurous}" ng-click="showMap = true; options('yes'); clicked = !clicked">Understood</button>
         </div>
         <div class="col col-50">
           <button class="button button-assertive button-block icon-right ion-sad"  ng-class="{'button-assertive' : option===0}" ng-click="showMap = true; options('no'); yelping(); clicked2 = !clicked2">Confused</button>
         </div>
-      </div>
+      </div> -->
+    <br>
+    <button class="button button-block" ng-click="comment(student.comments)">Submit</button>
 
-     <button class="button button-block" ng-click="comment(student.comments)">Submit</button>
-     <br>
-     <div ng-show="sentiment.score" ng-class="{ 'danger': sentiment.score < 0, 'green': sentiment.score > 0 }" class="">
+     <!-- This is where we will show all the results of the poll -->
+<!-- <div ng-show="sentiment.score" ng-class="{ 'danger': sentiment.score < 0, 'green': sentiment.score > 0 }" class="">
       <h4>
-      <center>
-        
+      <center> 
       <p>Sentiment Type: {{sentiment.type}}</p>
       <p>
       Sentiment Score: {{sentiment.score}}     
       </p>
       </center>
       </h4>
-     </div>
+     </div> -->
   </ion-content>
 </ion-view>

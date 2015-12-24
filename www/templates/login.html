@@ -1,26 +1,25 @@
-<ion-modal-view>
+<ion-modal-viewn class='modal_full_screen'>
   <ion-header-bar>
     <h1 class="title">Login</h1>
   </ion-header-bar>
   <ion-content>
   <br>
-   <br>
-  <center><img src="img/logo4.jpg" style="border:3px solid black; width:325px " ></center>
   <br>
   <center><h2>Poll2Roll</h2></center>
-    <br>
 
-  <div class="list">
+  <center><img src="img/logo4.jpg" style="border:3px solid black; width:325px"></center>
+  <br>
+  <br>
 
   <div ng-click="login()">
-  <center><img src="img/fb.png" style="width:50%"></img></center>
+  <center><img src="img/fb.png" style="width:250px"></img></center>
 </div>
 
-<div class="card" ng-show="authData">
+<div class="card" ng-show="authData" ng-click="savefbinfo(userType)">
   <div class="item item-text-wrap item-icon-right item-avatar">
   <img ng-src="{{authData.profileImageURL}}">
     Hello {{authData.displayName}}!
-    <i class="icon ion-chevron-right icon-accessory" ng-click="savefbinfo(userType)"></i>
+    <i class="icon ion-chevron-right icon-accessory"></i>
   </div>
 </div>
 

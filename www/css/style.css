@@ -1,10 +1,30 @@
-/* Empty. Add your own CSS if you like */
-
-
 .danger {
 	background-color: red;
 }
-
 .green {
 	background-color: #19FF19;
+}
+
+.modal_full_screen {
+  display: block;
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  overflow: hidden;
+  min-height: 100%;
+  width: 100%;
+  background-color: #fff; 
+}
+
+.headshot {
+    display: block;
+    margin: 0 auto;
+    width: 100px;
+    height: auto;
+    border-radius: 180px;
+}
+
+.padding_vertical {
+	padding-top: 10px;
+	padding-bottom: 10px;
 }

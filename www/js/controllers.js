@@ -2,10 +2,18 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth, $ionicSwipeCardDelegate) {
  //$http.defaults.headers.common.Authorization = 'Basic dGVzdHVzZXI6MTIzNA==';
- $scope.cards = [];
-    $scope.cardTypes = {};
-    $scope.cards.push($scope.cardTypes);
-    $scope.student = {};
+  $scope.cards = [];
+  $scope.cardTypes = {};
+  $scope.cards.push($scope.cardTypes);
+  $scope.student = {};
+
+  //Opens the login modal as soon as the controller initializes
+  $ionicModal.fromTemplateUrl('templates/login.html', {
+    scope: $scope
+  }).then(function(modallogin) {
+      $scope.modallogin = modallogin;
+      $scope.modallogin.show();
+  });
 
   $scope.cardSwiped = function(index) {
     var newCard = {};
@@ -171,13 +179,6 @@ $scope.savefbinfo  = function() {
             });
   }
 
-   $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modallogin) {
-      $scope.modallogin = modallogin;
-      $scope.modallogin.show();
-  });
-
 })
 
 
@@ -192,14 +193,13 @@ $scope.savefbinfo  = function() {
 
 })
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function($scope) {
+})
 
 .controller('ChatsCtrl', function($scope) {
-
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams) {
-
 })
 
 .controller('AccountCtrl', function($scope) {
