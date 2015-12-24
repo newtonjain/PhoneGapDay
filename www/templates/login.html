@@ -11,17 +11,17 @@
   <br>
   <br>
 
-  <div ng-click="login()">
-  <center><img src="img/fb.png" style="width:250px"></img></center>
-</div>
-
-<div class="card" ng-show="authData" ng-click="savefbinfo(userType)">
-  <div class="item item-text-wrap item-icon-right item-avatar">
-  <img ng-src="{{authData.profileImageURL}}">
-    Hello {{authData.displayName}}!
-    <i class="icon ion-chevron-right icon-accessory"></i>
+  <div ng-click="login()" ng-show="!authData">
+    <center><img src="img/fb.png" style="width:250px"></img></center>
   </div>
-</div>
+
+  <div class="card" ng-show="authData" ng-click="savefbinfo()">
+    <div class="item item-text-wrap item-icon-right item-avatar">
+      <img ng-src="{{authData.profileImageURL}}">
+      Hello {{authData.displayName}}!
+      <i class="icon ion-chevron-right icon-accessory"></i>
+    </div>
+  </div>
 
   </ion-content>
 </ion-modal-view>
