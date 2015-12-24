@@ -3,6 +3,7 @@ angular.module('starter.controllers', [])
 .controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth, $ionicSwipeCardDelegate) {
   //$http.defaults.headers.common.Authorization = 'Basic dGVzdHVzZXI6MTIzNA==';
   $scope.student = {};
+      $scope.counter = 1;
   var _self = this;
   _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
   $scope.users = $firebaseArray(_self.users);
@@ -15,6 +16,55 @@ angular.module('starter.controllers', [])
       $scope.modallogin.show();
   });
 
+    $scope.max = 200;
+
+  $scope.random = function() {
+    // var value = Math.floor((Math.random() * 100) + 1);
+    var value = 1;
+
+
+    var type;
+
+    if (value < 25) {
+      type = 'danger';
+    } else if (value < 50) {
+      type = 'warning';
+    } else if (value < 75) {
+      type = 'info';
+    } else {
+      type = 'success';
+    }
+
+    $scope.dynamic = value;
+    $scope.type = type;
+  };
+  $scope.random();
+
+   setInterval(function(){ 
+      $scope.counter = $scope.counter + 1;
+    }, 1000);
+
+
+      $scope.$watch('counter', function(number) {
+      if(number){
+      // alert(number);
+    $scope.dynamic = number;  
+    var value = number
+
+    if (value < 25) {
+      type = 'danger';
+    } else if (value < 50) {
+      type = 'warning';
+    } else if (value < 75) {
+      type = 'info';
+    } else {
+      type = 'success';
+    }
+    $scope.type = type;
+        
+      }
+    })
+
   //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
   //used to get more advanced information. Second call has some limitations at the moment. 
   $scope.login = function() {
@@ -24,11 +74,11 @@ angular.module('starter.controllers', [])
       if (error) {
         console.log("Login Failed!", error);
       } else {
-        // the access token will allow us to make Open Graph API calls
+        // the access token will allow us to make Open Graph API calls.
         console.log(authData.facebook.accessToken);
         console.log("Logged in as", authData);
 
-        $scope.authData = authData.facebook; // This will display the user's name in our view
+        $scope.authData = authData.facebook; // This will display the user's name in our view.
         $http.get('https://graph.facebook.com/me?fields=cover,gender,age_range,birthday,picture.width(800).height(800)&access_token=' + authData.facebook.accessToken)
         .success(function (data) {
           console.log("got it when made a request to FB open graph", data);
@@ -81,7 +131,6 @@ angular.module('starter.controllers', [])
           userData: userData
         });
       }
-
     });
   };
 

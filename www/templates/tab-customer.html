@@ -1,5 +1,5 @@
 <ion-view view-title="Feedback TIme">
-  <ion-content scroll="false">
+  <ion-content>
 
       <button class="button button-royal button-block" >Rate the current topic</button>
       <br>
@@ -28,6 +28,8 @@
       </label>
     </div>
 
+    {{counter}}
+
 <!--       <div class="row">
         <div class="col col-50">
           <button class="button button-block button-balanced icon-left ion-happy" ng-class="{'button-balanced' : clicked && !adventurous}" ng-click="showMap = true; options('yes'); clicked = !clicked">Understood</button>
@@ -50,5 +52,27 @@
       </center>
       </h4>
      </div> -->
-  </ion-content>
+
+     <h3>Dynamic <button type="button" class="btn btn-sm btn-primary" ng-click="random()">Randomize</button></h3>
+     
+
+      <uib-progressbar class="progress-striped active" value="dynamic" >{{dynamic}} / {{max}}</uib-progressbar>
+
+      <uib-progressbar animate="true" value="dynamic" type="success"><b>{{dynamic}}%</b></uib-progressbar>
+
+     <uib-progressbar max="max" value="dynamic" type="{{type}}"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
+
+<ion-slide-box>
+    <ion-slide>
+        <img style="width: 100%" src="http://upload.wikimedia.org/wikipedia/commons/7/79/2001_BMW_Z3_Sideview_Topdown_Topaz_Blue_2.5i.jpg">
+    </ion-slide>
+    <ion-slide>
+        <img style="width: 100%" src="http://upload.wikimedia.org/wikipedia/commons/2/2e/BMW_Z3_1.9L_1998.jpg">
+    </ion-slide>
+    <ion-slide>
+        <img style="width: 100%" src="http://www.bmwblog.com/wp-content/uploads/bmw-z3-black.jpg">
+    </ion-slide>
+</ion-slide-box>
+
+</ion-content>
 </ion-view>

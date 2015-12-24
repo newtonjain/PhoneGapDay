@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.ionicframework.myapp925502" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>myApp</name>
+  <name>Poll2Roll</name>
   <description>
         An Ionic Framework and Cordova project.
     </description>
@@ -9,6 +9,10 @@
     </author>
   <access origin="*" />
   <content src="index.html" />
+  <!-- Allow links to web pages to open in a browser -->
+<allow-intent href="*" />
+
+
 
 
   <preference name="webviewbounce" value="false" />
