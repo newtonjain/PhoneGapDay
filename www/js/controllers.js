@@ -16,27 +16,7 @@ angular.module('starter.controllers', [])
       $scope.modallogin.show();
   });
 
-  $scope.random = function() {
-    // var value = Math.floor((Math.random() * 100) + 1);
-    var value = 1;
 
-
-    var type;
-
-    if (value < 25) {
-      type = 'danger';
-    } else if (value < 50) {
-      type = 'warning';
-    } else if (value < 75) {
-      type = 'info';
-    } else {
-      type = 'success';
-    }
-
-    $scope.dynamic = value;
-    $scope.type = type;
-  };
-  $scope.random();
 
 
   //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
@@ -208,7 +188,7 @@ function onSuccess(acceleration) {
 
     var type;
 
-    if ($scope.dynamic < 40) {
+    if ($scope.dynamic < 45) {
       type = 'warning';
     } else {
       type = 'success';
@@ -231,7 +211,6 @@ function onError() {
 var options = { frequency: 500 };  // Update every 3 seconds
 
 var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
-
 })
 
 .controller('DashCtrl', function($scope) {
