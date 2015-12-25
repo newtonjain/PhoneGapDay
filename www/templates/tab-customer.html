@@ -7,9 +7,19 @@
    <!--        <swipe-cards>
       <swipe-card ng-repeat="card in cards" on-card-swipe="cardSwiped($index)" id="start-card">
         Swipe down for a new card -->
+<ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
+    <ion-slide ng-repeat="question in questions track by $index">
+    <div class="card padding_vertical">
+    <p><h4>
+     {{question.$id}}:{{question.$value}}
+     </h4></p> 
+     <uib-progressbar max="max" ng-hide="question.Rating" value="dynamic" type="{{type}}" style="height: 20px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
+     {{question}} {{$index}}
+    </div>
+    </ion-slide>
+</ion-slide-box>      
 
-
-<ion-slide-box show-pager="false">
+<!-- <ion-slide-box show-pager="false">
     <ion-slide>
     <div class="card padding_vertical">
     <p><h4>
@@ -69,7 +79,7 @@
         </div>
       </div> -->
     <br>
-    <button class="button button-block" ng-click="comment(student.comments)">Submit</button>
+    <button class="button button-block" ng-click="submitSurvey()">Submit</button>
 
 </ion-content>
 </ion-view>

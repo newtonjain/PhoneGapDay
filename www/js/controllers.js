@@ -6,7 +6,11 @@ angular.module('starter.controllers', [])
       $scope.counter = 1;
   var _self = this;
   _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
+  _self.questions = new Firebase("https://poll2roll.firebaseio.com/questions");
+
   $scope.users = $firebaseArray(_self.users);
+  $scope.questions = $firebaseArray(_self.questions);
+  $scope.testing = $firebaseObject(_self.questions);
 
   //Opens the login modal as soon as the controller initializes
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -51,13 +55,15 @@ angular.module('starter.controllers', [])
     {
     scope: "email,user_birthday" // the permissions requested
     });
+
+console.log($scope.users, $scope.questions[2], $scope.questions.length);
   };
 
   $scope.savefbinfo  = function() {
     $scope.modallogin.hide();
     _self.userExists = false;
 
-    var userData= {
+    var userData = {
       "facebook_id": $scope.authData.id,
       "name": $scope.authData.displayName,
       "email": $scope.authData.email,
@@ -73,7 +79,8 @@ angular.module('starter.controllers', [])
         var name = userSnapshot.child("username").val();
          console.log('////', name);
          if(name == $scope.authData.displayName) {
-          console.log('matching');
+          console.log('matching', userSnapshot.key());
+           $scope.key = userSnapshot.key();
           _self.userExists = true;
           return true;
          }
@@ -83,9 +90,15 @@ angular.module('starter.controllers', [])
         $scope.users.$add({
           username: $scope.authData.displayName,
           userData: userData
-        });
+        }).then(function(ref) {
+      $scope.key = ref.key();
+      console.log("added record with id " + $scope.key, '/////', $scope.users.$indexFor($scope.key));
+      // returns location in the array
+    });
+
       }
     });
+    $scope.index = $scope.users.$indexFor($scope.key);
   };
 
   $scope.options = function (option) {
@@ -153,13 +166,45 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('CustomerCtrl', function($scope, $http, $window) {
-
+.controller('CustomerCtrl', function($scope, $http, $window, $ionicSlideBoxDelegate) {
+  var _self = this;
   $scope.X;
   $scope.Y;
   $scope.Z;
   $scope.dynamic = 50;
   $scope.max = 100;
+
+
+  _self.prev = 0;
+
+$scope.slideHasChanged = function(index) {
+$scope.questions[_self.prev].Rating = $scope.dynamic;
+console.log('here is prev', _self.prev);
+_self.prev = index;
+$scope.dynamic = 50;
+}
+
+$scope.submitSurvey = function() {
+  console.log($scope.questions);
+   // $scope.users[0].Ratings = {
+   //  'q1': {'id': {'i': 3}, 'val': "Christmas"},
+   //  'q2': 55,
+   //  'q3': 68,
+   //  'q4': 1
+   // };
+
+   var obj = $scope.questions.reduce(function(o, v, i) {
+  o[i] = v;
+  return o;
+  }, {});
+
+  $scope.users[0].newton = $scope.testing;
+
+   console.log(obj);
+   $scope.users.$save(0);
+
+}
+
 
 function onSuccess(acceleration) {
 
@@ -186,6 +231,10 @@ function onSuccess(acceleration) {
       $scope.dynamic = 0;
     }
 
+    if($scope.Z < -3) {
+      $scope.submitSurvey();
+    }
+
     var type;
 
     if ($scope.dynamic < 45) {
@@ -210,7 +259,7 @@ function onError() {
 
 var options = { frequency: 500 };  // Update every 3 seconds
 
-var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+//var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 })
 
 .controller('DashCtrl', function($scope) {
