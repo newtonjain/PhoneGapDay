@@ -29,6 +29,9 @@
     </div>
 
     {{counter}}
+    {{X}}
+    {{Y}}
+    {{Z}}
 
 <!--       <div class="row">
         <div class="col col-50">
@@ -53,14 +56,11 @@
       </h4>
      </div> -->
 
+     <uib-progressbar max="max" class="progress-striped active" value="dynamic" type="{{type}}" style="height: 20px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
+
      <h3>Dynamic <button type="button" class="btn btn-sm btn-primary" ng-click="random()">Randomize</button></h3>
      
 
-      <uib-progressbar class="progress-striped active" value="dynamic" >{{dynamic}} / {{max}}</uib-progressbar>
-
-      <uib-progressbar animate="true" value="dynamic" type="success"><b>{{dynamic}}%</b></uib-progressbar>
-
-     <uib-progressbar max="max" value="dynamic" type="{{type}}"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
 
 <ion-slide-box>
     <ion-slide>

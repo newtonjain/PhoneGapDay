@@ -16,8 +16,6 @@ angular.module('starter.controllers', [])
       $scope.modallogin.show();
   });
 
-    $scope.max = 200;
-
   $scope.random = function() {
     // var value = Math.floor((Math.random() * 100) + 1);
     var value = 1;
@@ -40,30 +38,6 @@ angular.module('starter.controllers', [])
   };
   $scope.random();
 
-   setInterval(function(){ 
-      $scope.counter = $scope.counter + 1;
-    }, 1000);
-
-
-      $scope.$watch('counter', function(number) {
-      if(number){
-      // alert(number);
-    $scope.dynamic = number;  
-    var value = number
-
-    if (value < 25) {
-      type = 'danger';
-    } else if (value < 50) {
-      type = 'warning';
-    } else if (value < 75) {
-      type = 'info';
-    } else {
-      type = 'success';
-    }
-    $scope.type = type;
-        
-      }
-    })
 
   //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
   //used to get more advanced information. Second call has some limitations at the moment. 
@@ -199,14 +173,64 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('CustomerCtrl', function($scope, $http) {
+.controller('CustomerCtrl', function($scope, $http, $window) {
 
-  $scope.calling = function() {
-    var tosend = {
-      "text": "I am getting an error saying XMLHttpRequest cannot load [url] Response for preflight has invalid HTTP status code 400.I tried calling from a form and it appears to be working. I debug the service from inside Visual Studio and it worked just fine",
-    };
-            
-  }
+  $scope.X;
+  $scope.Y;
+  $scope.Z;
+  $scope.dynamic = 50;
+  $scope.max = 100;
+
+function onSuccess(acceleration) {
+
+    $scope.X = acceleration.x;
+    $scope.Y = acceleration.y;
+    $scope.Z = acceleration.z;
+
+    if($scope.X < -3 && $scope.X > -5) {
+      $scope.dynamic += 4;
+    } 
+    if ($scope.X < -5) {
+      $scope.dynamic += 8;
+    } 
+    if ($scope.X > 5) {
+      $scope.dynamic -= 8;
+    } 
+    if ($scope.X > 3 && $scope.X < 5) {
+      $scope.dynamic -= 4;
+    } 
+
+    if($scope.dynamic > 100) {
+      $scope.dynamic = 100;
+    } else if($scope.dynamic <0) {
+      $scope.dynamic = 0;
+    }
+
+    var type;
+
+    if ($scope.dynamic < 40) {
+      type = 'warning';
+    } else {
+      type = 'success';
+    }
+    // else if ($scope.dynamic < 50) {
+    //   type = 'warning';
+    // } else if ($scope.dynamic < 75) {
+    //   type = 'info';
+    // } 
+
+    $scope.type = type;
+
+    $scope.$apply();
+}
+
+function onError() {
+    console.log('accelerometer not working');
+}
+
+var options = { frequency: 500 };  // Update every 3 seconds
+
+var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 
 })
 
