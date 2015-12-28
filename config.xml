@@ -11,9 +11,9 @@
   <content src="index.html" />
   <!-- Allow links to web pages to open in a browser -->
 <allow-intent href="*" />
-
-
-
+<feature name="Vibration">
+    <param name="android-package" value="org.apache.cordova.vibration.Vibration" />
+</feature>
 
   <preference name="webviewbounce" value="false" />
   <preference name="UIWebViewBounce" value="false" />
