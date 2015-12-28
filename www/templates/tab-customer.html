@@ -1,84 +1,33 @@
 <ion-view view-title="Feedback TIme">
   <ion-content>
 
-      <button class="button button-royal button-block" >Rate the current topic</button>
-      <br>
-      <h5>Tilt the device left or right to fill the ratings bar.</h5>
-   <!--        <swipe-cards>
-      <swipe-card ng-repeat="card in cards" on-card-swipe="cardSwiped($index)" id="start-card">
-        Swipe down for a new card -->
-<ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
-    <ion-slide ng-repeat="question in questions track by $index">
-    <div class="card padding_vertical">
-    <p><h4>
-     {{question.$id}}:{{question.$value}}
-     </h4></p> 
-     <uib-progressbar max="max" ng-hide="question.Rating" value="dynamic" type="{{type}}" style="height: 20px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
-     {{question}} {{$index}}
-    </div>
-    </ion-slide>
-</ion-slide-box>      
-
-<!-- <ion-slide-box show-pager="false">
-    <ion-slide>
-    <div class="card padding_vertical">
-    <p><h4>
-     1) Would you like to learn more about TACO (Tools for Apache Cordova)? 
-    </h4></p> 
-     <uib-progressbar max="max" value="dynamic" type="{{type}}" style="height: 20px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>       
-    </div>
-    </ion-slide>
-    <ion-slide>
-    <div class="card padding_vertical">
-    <p><h4>
-     2) Do you like VS Code?
-     </h4></p> 
-     <uib-progressbar max="max" value="dynamic" type="{{type}}" style="height: 20px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
-    </div>
-    </ion-slide>
-    <ion-slide>
-     <div class="card padding_vertical">
-     <p><h4>
-     3) Would you like to learn more about Code Push?
-     </h4></p> 
-     <uib-progressbar max="max" value="dynamic" type="{{type}}" style="height: 20px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
-    </div>
-    </ion-slide>
-    <ion-slide>
-    <div class="card padding_vertical">
-    <p><h4>
-     4) Did you like the presentation?
-     </h4></p> 
-     <uib-progressbar max="max" value="dynamic" type="{{type}}" style="height: 20px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
-    </div>
-    </ion-slide>
-    <ion-slide>
-    <div class="card padding_vertical">
-    <p><h4>
-     5) How awesome is Microsoft Cordova team (there is only one right answer)?
-    </h4></p> 
-     <uib-progressbar max="max" value="dynamic" type="{{type}}" style="height: 20px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
-    </div>
-    </ion-slide>
-</ion-slide-box>
-
-
-    <div class="list list-inset">
-      <label class="item item-input">
-        <textarea type="text" placeholder="Enter your comments here" ng-model="student.comments"></textarea>
-      </label>
-    </div>
-
-
-<!--       <div class="row">
-        <div class="col col-50">
-          <button class="button button-block button-balanced icon-left ion-happy" ng-class="{'button-balanced' : clicked && !adventurous}" ng-click="showMap = true; options('yes'); clicked = !clicked">Understood</button>
-        </div>
-        <div class="col col-50">
-          <button class="button button-assertive button-block icon-right ion-sad"  ng-class="{'button-assertive' : option===0}" ng-click="showMap = true; options('no'); yelping(); clicked2 = !clicked2">Confused</button>
-        </div>
-      </div> -->
+    <button class="button button-royal button-block" >Rate the current topic</button>
     <br>
+    <h3 class="item">Tilt device left or right to fill the bar.</h3>
+
+    <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
+      <ion-slide ng-repeat="question in questions track by $index">
+
+        <div class="card padding_vertical item item-body">
+        <p><h3>Question {{$index + 1}}: 
+        <p><h2>{{question.$value}}</h2></p>
+        </h3></p> 
+
+        <uib-progressbar max="max" ng-hide="question.Rating" value="dynamic" type="{{type}}" style="height: 20px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
+
+        <div class="item item-text-wrap item-icon-right" style="margin-left: -15px" ng-show="question.Rating">
+        <b>Your Rating:</b> 
+        <p>
+        <h1 ng-class="question.Rating > 45 ? 'balanced' : 'assertive'">{{question.Rating}} / {{max}}</h1>  
+        </p>
+        <i class="icon ion-refresh icon-accessory" ng-click="rateAgain()"></i>
+        </div>
+        </div>
+
+      </ion-slide>
+    </ion-slide-box>      
+
+ <br>
     <button class="button button-block" ng-click="submitSurvey()">Submit</button>
 
 </ion-content>

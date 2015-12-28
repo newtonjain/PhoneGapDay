@@ -165,7 +165,6 @@ console.log($scope.users, $scope.questions[2], $scope.questions.length);
 
 })
 
-
 .controller('CustomerCtrl', function($scope, $http, $window, $ionicSlideBoxDelegate) {
   var _self = this;
   $scope.X;
@@ -178,20 +177,21 @@ console.log($scope.users, $scope.questions[2], $scope.questions.length);
   _self.prev = 0;
 
 $scope.slideHasChanged = function(index) {
-$scope.questions[_self.prev].Rating = $scope.dynamic;
-console.log('here is prev', _self.prev);
-_self.prev = index;
-$scope.dynamic = 50;
+  if(!$scope.questions[_self.prev].Rating){
+    $scope.questions[_self.prev].Rating = $scope.dynamic;
+  }
+  console.log('here is prev', _self.prev);
+  _self.prev = index;
+  $scope.dynamic = 50;
+}
+
+$scope.rateAgain = function() {
+  $scope.dynamic = $scope.questions[_self.prev].Rating;
+  $scope.questions[_self.prev].Rating = null;
 }
 
 $scope.submitSurvey = function() {
   console.log($scope.questions);
-   // $scope.users[0].Ratings = {
-   //  'q1': {'id': {'i': 3}, 'val': "Christmas"},
-   //  'q2': 55,
-   //  'q3': 68,
-   //  'q4': 1
-   // };
 
    var obj = $scope.questions.reduce(function(o, v, i) {
   o[i] = v;
@@ -202,12 +202,10 @@ $scope.submitSurvey = function() {
 
    console.log(obj);
    $scope.users.$save(0);
-
 }
 
 
 function onSuccess(acceleration) {
-
     $scope.X = acceleration.x;
     $scope.Y = acceleration.y;
     $scope.Z = acceleration.z;
@@ -249,7 +247,6 @@ function onSuccess(acceleration) {
     // } 
 
     $scope.type = type;
-
     $scope.$apply();
 }
 
@@ -259,7 +256,7 @@ function onError() {
 
 var options = { frequency: 500 };  // Update every 3 seconds
 
-//var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 })
 
 .controller('DashCtrl', function($scope) {
