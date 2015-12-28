@@ -3,7 +3,7 @@
 
     <button class="button button-royal button-block">Rate the current topic</button>
     <br>
-    <h3 class="item">Tilt device left or right to fill the bar.</h3>
+    <h3 class="item">{{ prev < questions.length - 1  ? "Tilt device left or right to fill the bar." : "Raise your device to submit responses." }}</h3>
 
     <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
       <ion-slide ng-repeat="question in questions track by $index">
@@ -23,7 +23,6 @@
         <i class="icon ion-refresh icon-accessory" ng-click="rateAgain()"></i>
         </div>
         </div>
-
       </ion-slide>
     </ion-slide-box> 
 
@@ -31,9 +30,9 @@
 <button ng-click="previous()" class="button">&#60; Previous </button>
 <button ng-click="next()" class="button">Next &#62;</button>
 </div>     
-
+<!-- 
  <br>
-    <button class="button button-block" ng-click="submitSurvey()">Submit</button>
+    <button class="button button-block" ng-click="submitSurvey()">Submit</button> -->
 
 </ion-content>
 </ion-view>

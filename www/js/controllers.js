@@ -173,44 +173,49 @@ console.log($scope.users, $scope.questions[2], $scope.questions.length);
   $scope.dynamic = 50;
   $scope.max = 100;
   _self.surveySubmitted = false;
-  _self.prev = 0;
+  $scope.prev = 0;
 
 $scope.slideHasChanged = function(index) {
-  if(!$scope.questions[_self.prev].Rating){
-    $scope.questions[_self.prev].Rating = $scope.dynamic;
+  if(!$scope.questions[$scope.prev].Rating){
+    $scope.questions[$scope.prev].Rating = $scope.dynamic;
   }
-  console.log('here is prev', _self.prev);
-  _self.prev = index;
+  $scope.prev = index;
   $scope.dynamic = 50;
 }
 
 $scope.closeLogin = function() {
   $scope.modal.hide();
 };
-  
+
 $scope.rateAgain = function() {
-  $scope.dynamic = $scope.questions[_self.prev].Rating;
-  $scope.questions[_self.prev].Rating = null;
+  $scope.dynamic = $scope.questions[$scope.prev].Rating;
+  $scope.questions[$scope.prev].Rating = null;
 }
 
- $ionicModal.fromTemplateUrl('templates/transactionComplete.html', {
+ $ionicModal.fromTemplateUrl('templates/surveyComplete.html', {
   scope: $scope
 }).then(function(modal) {
   $scope.modal = modal;
 });
 
 $scope.submitSurvey = function() {
-  console.log($scope.questions);
+  var send={};
 
-   var obj = $scope.questions.reduce(function(o, v, i) {
-  o[i] = v;
-  return o;
-  }, {});
+  $scope.questions[$scope.prev].Rating = $scope.dynamic;
 
-  $scope.users[0].newton = $scope.testing;
+  for(var i = 0; i < $scope.questions.length; i++) {
+    var val = $scope.questions[i];
+    send[val.$id] = val.Rating || 'NA';
+  }
 
-  console.log(obj);
-  $scope.users.$save(0);
+  $scope.users[$scope.index].feedback = send;
+  console.log('///', $scope.users[$scope.index].feedback);
+
+  $scope.users.$save($scope.index).then(function() {
+  $scope.modal.show();
+  _self.surveySubmitted = true;
+  });
+
 }
 
 $scope.previous = function() {
@@ -218,14 +223,19 @@ $scope.previous = function() {
 }
 
 $scope.next = function() {
-  // $ionicSlideBoxDelegate.next();
-  $scope.modal.show();
+  $ionicSlideBoxDelegate.next();
 }
 
 function onSuccess(acceleration) {
     $scope.X = acceleration.x;
     $scope.Y = acceleration.y;
     $scope.Z = acceleration.z;
+
+    if($scope.Z < -3) {
+      if(!_self.surveySubmitted){ 
+        $scope.submitSurvey();
+      }
+    }
 
     if($scope.X < -3 && $scope.X > -5) {
       $scope.dynamic += 4;
@@ -251,16 +261,6 @@ function onSuccess(acceleration) {
     } else if($scope.dynamic <0) {
       $scope.dynamic = 0;
     }
-
-    if($scope.Z < -3) {
-      if(!_self.surveySubmitted){ 
-        // Vibrate for 2.5 seconds
-        $window.navigator.notification.vibrate(2500);
-        $scope.submitSurvey();
-        _self.surveySubmitted = true;
-      }
-    }
-
     var type;
 
     if ($scope.dynamic < 45) {
@@ -268,12 +268,6 @@ function onSuccess(acceleration) {
     } else {
       type = 'success';
     }
-    // else if ($scope.dynamic < 50) {
-    //   type = 'warning';
-    // } else if ($scope.dynamic < 75) {
-    //   type = 'info';
-    // } 
-
     $scope.type = type;
     $scope.$apply();
 }
@@ -284,7 +278,7 @@ function onError() {
 
 var options = { frequency: 500 };  // Update every 3 seconds
 
-//var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 })
 
 .controller('DashCtrl', function($scope) {
