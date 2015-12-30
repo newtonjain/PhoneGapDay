@@ -1,8 +1,6 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth) {
-  //$http.defaults.headers.common.Authorization = 'Basic dGVzdHVzZXI6MTIzNA==';
-  $scope.student = {};
 
   var _self = this;
   _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
@@ -10,7 +8,6 @@ angular.module('starter.controllers', [])
 
   $scope.users = $firebaseArray(_self.users);
   $scope.questions = $firebaseArray(_self.questions);
-  $scope.testing = $firebaseObject(_self.questions);
 
   //Opens the login modal as soon as the controller initializes
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -53,8 +50,6 @@ angular.module('starter.controllers', [])
     {
     scope: "email,user_birthday" // the permissions requested
     });
-
-console.log($scope.users, $scope.questions[2], $scope.questions.length);
   };
 
   $scope.savefbinfo  = function() {
@@ -98,7 +93,6 @@ console.log($scope.users, $scope.questions[2], $scope.questions.length);
     });
     $scope.index = $scope.users.$indexFor($scope.key);
   };
-
 })
 
 .controller('CustomerCtrl', function($scope, $http, $window, $ionicSlideBoxDelegate, $ionicModal, $ionicPlatform) {
@@ -151,7 +145,6 @@ $scope.submitSurvey = function() {
   $scope.modal.show();
   _self.surveySubmitted = true;
   });
-
 }
 
 $scope.previous = function() {
@@ -166,12 +159,6 @@ function onSuccess(acceleration) {
     $scope.X = acceleration.x;
     $scope.Y = acceleration.y;
     $scope.Z = acceleration.z;
-
-    if($scope.Z < -3) {
-      if(!_self.surveySubmitted){ 
-       
-      }
-    }
 
     if($scope.X < -3 && $scope.X > -5) {
       $scope.dynamic += 4;
@@ -223,7 +210,7 @@ var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onErr
   // watch Acceleration
   $scope.options = { 
     frequency: 100, // Measure every 100ms
-        deviation : 25  // We'll use deviation to determine the shake event, best values in the range between 25 and 30
+    deviation : 25  // We'll use deviation to determine the shake event, best values in the range between 25 and 30
   };
 
   // Current measurements
@@ -252,16 +239,14 @@ var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onErr
     $scope.startWatching = function() {   
 
         // Device motion configuration
-var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+    var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
         
     };    
 
-
-    
     // Stop watching method
     $scope.stopWatching = function() {  
       $window.navigator.accelerometer.clearWatch(watchID);
-        }   
+    }   
     
     // Detect shake method    
     $scope.detectShake = function(result) { 
@@ -306,12 +291,6 @@ var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onErr
   $scope.$on('$ionicView.beforeLeave', function(){
       $window.navigator.accelerometer.clearWatch(watchID);
   }); 
-
 })
 
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-});
