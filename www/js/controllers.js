@@ -1,297 +1,221 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth, $ionicSwipeCardDelegate) {
-  //$http.defaults.headers.common.Authorization = 'Basic dGVzdHVzZXI6MTIzNA==';
-  $scope.student = {};
-      $scope.counter = 1;
-  var _self = this;
-  _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
-  _self.questions = new Firebase("https://poll2roll.firebaseio.com/questions");
+.controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth) {
 
-  $scope.users = $firebaseArray(_self.users);
-  $scope.questions = $firebaseArray(_self.questions);
-  $scope.testing = $firebaseObject(_self.questions);
+    var _self = this;
+    _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
+    _self.questions = new Firebase("https://poll2roll.firebaseio.com/questions");
 
-  //Opens the login modal as soon as the controller initializes
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modallogin) {
-      $scope.modallogin = modallogin;
-      $scope.modallogin.show();
-  });
+    $scope.users = $firebaseArray(_self.users);
+    $scope.questions = $firebaseArray(_self.questions);
 
-
-
-
-  //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
-  //used to get more advanced information. Second call has some limitations at the moment. 
-  $scope.login = function() {
-    var ref = new Firebase("https://poll2roll.firebaseio.com/");
-
-    ref.authWithOAuthPopup("facebook", function(error, authData) {
-      if (error) {
-        console.log("Login Failed!", error);
-      } else {
-        // the access token will allow us to make Open Graph API calls.
-        console.log(authData.facebook.accessToken);
-        console.log("Logged in as", authData);
-
-        $scope.authData = authData.facebook; // This will display the user's name in our view.
-        $http.get('https://graph.facebook.com/me?fields=cover,gender,age_range,birthday,picture.width(800).height(800)&access_token=' + authData.facebook.accessToken)
-        .success(function (data) {
-          console.log("got it when made a request to FB open graph", data);
-          $scope.authData.cover = data.picture.data.url;
-          $scope.authData.gender = data.gender;
-          $scope.authData.age = data.age_range;
-          $scope.authData.id = parseInt(data.id);
-          $scope.authData.profileImageURL = data.picture.data.url;
-          $scope.authData.description = "Bio";
-        })
-        .error(function (data) {
-          console.log("Error: " + JSON.stringify(data));
-        });
-      }
-    },
-    {
-    scope: "email,user_birthday" // the permissions requested
+    //Opens the login modal as soon as the controller initializes
+    $ionicModal.fromTemplateUrl('templates/login.html', {
+        scope: $scope
+    }).then(function(modallogin) {
+        $scope.modallogin = modallogin;
+        $scope.modallogin.show();
     });
 
-console.log($scope.users, $scope.questions[2], $scope.questions.length);
-  };
 
-  $scope.savefbinfo  = function() {
-    $scope.modallogin.hide();
-    _self.userExists = false;
+    //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
+    //used to get more advanced information. Second call has some limitations at the moment. 
+    $scope.login = function() {
+        var ref = new Firebase("https://poll2roll.firebaseio.com/");
 
-    var userData = {
-      "facebook_id": $scope.authData.id,
-      "name": $scope.authData.displayName,
-      "email": $scope.authData.email,
-      "profile_picture_url": $scope.authData.profileImageURL,
-      "gender": $scope.authData.gender
+        ref.authWithOAuthPopup("facebook", function(error, authData) {
+            if (error) {
+                console.log("Login Failed!", error);
+            } else {
+                // the access token will allow us to make Open Graph API calls.
+                console.log(authData.facebook.accessToken);
+                console.log("Logged in as", authData);
+
+                $scope.authData = authData.facebook; // This will display the user's name in our view.
+                $http.get('https://graph.facebook.com/me?fields=cover,gender,age_range,birthday,picture.width(800).height(800)&access_token=' + authData.facebook.accessToken)
+                .success(function (data) {
+                    console.log("got it when made a request to FB open graph", data);
+                    $scope.authData.cover = data.picture.data.url;
+                    $scope.authData.gender = data.gender;
+                    $scope.authData.age = data.age_range;
+                    $scope.authData.id = parseInt(data.id);
+                    $scope.authData.profileImageURL = data.picture.data.url;
+                    $scope.authData.description = "Bio";
+                })
+                .error(function (data) {
+                    console.log("Error: " + JSON.stringify(data));
+                });
+            }
+        },
+        {
+            scope: "email,user_birthday" // the permissions requested
+        });
+        console.log($scope.users, $scope.questions[2], $scope.questions.length);
     };
 
-    var ref = _self.users;
-    ref.once("value", function(allUsersSnapshot) {
-      console.log('khjkjh', allUsersSnapshot.val());
+    $scope.savefbinfo  = function() {
+        $scope.modallogin.hide();
+        _self.userExists = false;
 
-      allUsersSnapshot.forEach(function(userSnapshot) {
-        var name = userSnapshot.child("username").val();
-         console.log('////', name);
-         if(name == $scope.authData.displayName) {
-          console.log('matching', userSnapshot.key());
-           $scope.key = userSnapshot.key();
-          _self.userExists = true;
-          return true;
-         }
-      }) 
+        var userData = {
+            "facebook_id": $scope.authData.id,
+            "name": $scope.authData.displayName,
+            "email": $scope.authData.email,
+            "profile_picture_url": $scope.authData.profileImageURL,
+            "gender": $scope.authData.gender
+        };
 
-      if(!_self.userExists) {
-        $scope.users.$add({
-          username: $scope.authData.displayName,
-          userData: userData
-        }).then(function(ref) {
-      $scope.key = ref.key();
-      console.log("added record with id " + $scope.key, '/////', $scope.users.$indexFor($scope.key));
-      // returns location in the array
-    });
+        var ref = _self.users;
+        ref.once("value", function(allUsersSnapshot) {
+        console.log('users: ', allUsersSnapshot.val());
 
-      }
-    });
-    $scope.index = $scope.users.$indexFor($scope.key);
-  };
-
-  $scope.options = function (option) {
-    $scope.option = option;
-    if(option === 'yes'){
-         $scope.option = '1';
-    } else {
-        $scope.option = '0';
-    }
-  }
-
-  $scope.comment = function(comment) {
-      var students;
-
-        $http.get('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', {
-        headers: {'Authorization': 'Basic dGVzdHVzZXI6MTIzNA=='}})
-        .success(function (data) {
-          students = data.results[0].Students;
-          console.log(JSON.stringify(data));
-
-
-          for(var i = 0; i<students.length; i++) {
-            if(students[i].name == $scope.authData.displayName) {
-              students[i].Rating = $scope.option;
-              students[i].Comments = comment;
-              break;
+        allUsersSnapshot.forEach(function(userSnapshot) {
+            var name = userSnapshot.child("username").val();
+            console.log('////', name);
+            if(name == $scope.authData.displayName) {
+                console.log('matching', userSnapshot.key());
+                $scope.key = userSnapshot.key();
+                _self.userExists = true;
+                return true;
             }
-          }
-          data.results[0].Students = students;
-
-           $http.put('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', data.results[0], {
-            headers: {'Authorization': 'Basic dGVzdHVzZXI6MTIzNA=='}})
-          .success(function (data, status, headers, config) {
-            console.log('saving data to customer', JSON.stringify(data), JSON.stringify(status));
-          }).error(function (data, status, headers, config) {
-              console.log('There was a problem posting your information' + JSON.stringify(data) + JSON.stringify(status));
-          });
         })
-        .error(function (data) {
-            alert("Error: " + JSON.stringify(data));
+
+        if(!_self.userExists) {
+            $scope.users.$add({
+                username: $scope.authData.displayName,
+                userData: userData
+            }).then(function(ref) {
+                $scope.key = ref.key();
+                console.log("added record with id " + $scope.key, '/////', $scope.users.$indexFor($scope.key));
+            });}
         });
-
-        if($scope.option == "0") {
-
-             $http.get('http://127.0.0.1:3111/no')
-            .success(function (data) {
-              console.log('success');
-            }).error(function (data) {
-                console.log('fail');
-            });
-        }
-
-        var sending = {};
-        
-      $http.post('http://gateway-a.watsonplatform.net/calls/text/TextGetTextSentiment?apikey=6dba745bbd9815883215760f648c975414379579&outputMode=json&text=' + comment)
-            .success(function (data, status, headers, config) {
-              console.log('IBM data', JSON.stringify(data.docSentiment)); 
-              $scope.sentiment = data.docSentiment;
-                          
-            }).error(function (data, status, headers, config) {
-              alert('Ibm error', JSON.stringify(data), JSON.stringify(status));
-            });
-  }
-
+        $scope.index = $scope.users.$indexFor($scope.key);
+    };
 })
 
 .controller('CustomerCtrl', function($scope, $http, $window, $ionicSlideBoxDelegate, $ionicModal) {
-  var _self = this;
-  $scope.X;
-  $scope.Y;
-  $scope.Z;
-  $scope.dynamic = 50;
-  $scope.max = 100;
-  _self.surveySubmitted = false;
-  $scope.prev = 0;
+    var _self = this;
+    $scope.X;
+    $scope.Y;
+    $scope.Z;
 
-$scope.slideHasChanged = function(index) {
-  if(!$scope.questions[$scope.prev].Rating){
-    $scope.questions[$scope.prev].Rating = $scope.dynamic;
-  }
-  $scope.prev = index;
-  $scope.dynamic = 50;
-}
+    $scope.dynamic = 50;
+    $scope.max = 100;
+    _self.surveySubmitted = false;
+    $scope.prev = 0;
 
-$scope.closeLogin = function() {
-  $scope.modal.hide();
-};
-
-$scope.rateAgain = function() {
-  $scope.dynamic = $scope.questions[$scope.prev].Rating;
-  $scope.questions[$scope.prev].Rating = null;
-}
-
- $ionicModal.fromTemplateUrl('templates/surveyComplete.html', {
-  scope: $scope
-}).then(function(modal) {
-  $scope.modal = modal;
-});
-
-$scope.submitSurvey = function() {
-  var send={};
-
-  $scope.questions[$scope.prev].Rating = $scope.dynamic;
-
-  for(var i = 0; i < $scope.questions.length; i++) {
-    var val = $scope.questions[i];
-    send[val.$id] = val.Rating || 'NA';
-  }
-
-  $scope.users[$scope.index].feedback = send;
-  console.log('///', $scope.users[$scope.index].feedback);
-
-  $scope.users.$save($scope.index).then(function() {
-  $scope.modal.show();
-  _self.surveySubmitted = true;
-  });
-
-}
-
-$scope.previous = function() {
-  $ionicSlideBoxDelegate.previous();
-}
-
-$scope.next = function() {
-  $ionicSlideBoxDelegate.next();
-}
-
-function onSuccess(acceleration) {
-    $scope.X = acceleration.x;
-    $scope.Y = acceleration.y;
-    $scope.Z = acceleration.z;
-
-    if($scope.Z < -3) {
-      if(!_self.surveySubmitted){ 
-        $scope.submitSurvey();
-      }
+    $scope.slideHasChanged = function(index) {
+        if(!$scope.questions[$scope.prev].Rating) {
+            $scope.questions[$scope.prev].Rating = $scope.dynamic;
+        }
+        
+        $scope.prev = index;
+        $scope.dynamic = 50;
     }
 
-    if($scope.X < -3 && $scope.X > -5) {
-      $scope.dynamic += 4;
-    } 
-    if ($scope.X < -5) {
-      $scope.dynamic += 8;
-    } 
-    if ($scope.X > 5) {
-      $scope.dynamic -= 8;
-    } 
-    if ($scope.X > 3 && $scope.X < 5) {
-      $scope.dynamic -= 4;
-    } 
-    // if($scope.X  < -9) {
-    //    $ionicSlideBoxDelegate.next();
-    // }
+    $scope.closeLogin = function() {
+        $scope.modal.hide();
+    };
 
-    // if($scope.X  > 9) {
-    //    $ionicSlideBoxDelegate.previous();
-    // }
-    if($scope.dynamic > 100) {
-      $scope.dynamic = 100;
-    } else if($scope.dynamic <0) {
-      $scope.dynamic = 0;
+    $scope.rateAgain = function() {
+        $scope.dynamic = $scope.questions[$scope.prev].Rating;
+        $scope.questions[$scope.prev].Rating = null;
     }
-    var type;
 
-    if ($scope.dynamic < 45) {
-      type = 'warning';
-    } else {
-      type = 'success';
+    $ionicModal.fromTemplateUrl('templates/surveyComplete.html', {
+        scope: $scope
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+
+    $scope.submitSurvey = function() {
+        var send={};
+        $scope.questions[$scope.prev].Rating = $scope.dynamic;
+
+        for(var i = 0; i < $scope.questions.length; i++) {
+            var val = $scope.questions[i];
+            send[val.$id] = val.Rating || 'NA';
+        }
+
+        $scope.users[$scope.index].feedback = send;
+        console.log('///', $scope.users[$scope.index].feedback);
+
+        $scope.users.$save($scope.index).then(function() {
+            $scope.modal.show();
+            _self.surveySubmitted = true;
+        });
     }
-    $scope.type = type;
-    $scope.$apply();
-}
 
-function onError() {
-    console.log('accelerometer not working');
-}
+    $scope.previous = function() {
+        $ionicSlideBoxDelegate.previous();
+    }
 
-var options = { frequency: 500 };  // Update every 3 seconds
+    $scope.next = function() {
+        $ionicSlideBoxDelegate.next();
+    }
 
-var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
-})
+    function onSuccess(acceleration) {
+        $scope.X = acceleration.x;
+        $scope.Y = acceleration.y;
+        $scope.Z = acceleration.z;
 
-.controller('DashCtrl', function($scope) {
-})
+        if($scope.Y < -6) {
+            // If the survey hasnt been submitted and you are on the last question.
+            if(!_self.surveySubmitted || $scope.questions.length - 1 == $scope.prev ) { 
+                $scope.submitSurvey();
+            }
+        }
 
-.controller('ChatsCtrl', function($scope) {
-})
+        if($scope.X < -3 && $scope.X > -5) {
+            $scope.dynamic += 4;
+        } 
+        
+        if ($scope.X < -5) {
+            $scope.dynamic += 8;
+        } 
+        
+        if ($scope.X > 5) {
+            $scope.dynamic -= 8;
+        }
+         
+        if ($scope.X > 3 && $scope.X < 5) {
+            $scope.dynamic -= 4;
+        } 
+        
+        if($scope.Z < -10.5) {
+            $ionicSlideBoxDelegate.next();
+            console.log("z:" +$scope.Z);
+        }
 
-.controller('ChatDetailCtrl', function($scope, $stateParams) {
-})
+        if($scope.Z  > 10.5) {
+            $ionicSlideBoxDelegate.previous();
+            console.log("z:" +$scope.Z);
+            
+        }
+        
+        if($scope.dynamic > 100) {
+            $scope.dynamic = 100;
+        } else if($scope.dynamic <0) {
+            $scope.dynamic = 0;
+        }
+        
+        var type = "warning";
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-});
+        if ($scope.dynamic < 25) {
+            type = 'danger';
+        } else  if ($scope.dynamic > 75) {
+            type = 'success';
+        }
+        
+        $scope.type = type;
+        $scope.$apply();
+    }
+
+    function onError() {
+        console.log('accelerometer not working');
+    }
+
+    // Watch for device motion every 500 milliseconds
+    var options = { frequency: 500 };
+    var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+ });

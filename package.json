@@ -23,8 +23,8 @@
     "com.ionic.keyboard"
   ],
   "cordovaPlatforms": [
-    "android",
-    "ios"
+    "ios",
+    "android"
   ],
   "scripts": {
     "start": "node start.js"
