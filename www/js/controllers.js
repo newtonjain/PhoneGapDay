@@ -1,9 +1,9 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth, $ionicSwipeCardDelegate) {
+.controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth) {
   //$http.defaults.headers.common.Authorization = 'Basic dGVzdHVzZXI6MTIzNA==';
   $scope.student = {};
-      $scope.counter = 1;
+
   var _self = this;
   _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
   _self.questions = new Firebase("https://poll2roll.firebaseio.com/questions");
@@ -19,8 +19,6 @@ angular.module('starter.controllers', [])
       $scope.modallogin = modallogin;
       $scope.modallogin.show();
   });
-
-
 
 
   //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
@@ -101,71 +99,9 @@ console.log($scope.users, $scope.questions[2], $scope.questions.length);
     $scope.index = $scope.users.$indexFor($scope.key);
   };
 
-  $scope.options = function (option) {
-    $scope.option = option;
-    if(option === 'yes'){
-         $scope.option = '1';
-    } else {
-        $scope.option = '0';
-    }
-  }
-
-  $scope.comment = function(comment) {
-      var students;
-
-        $http.get('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', {
-        headers: {'Authorization': 'Basic dGVzdHVzZXI6MTIzNA=='}})
-        .success(function (data) {
-          students = data.results[0].Students;
-          console.log(JSON.stringify(data));
-
-
-          for(var i = 0; i<students.length; i++) {
-            if(students[i].name == $scope.authData.displayName) {
-              students[i].Rating = $scope.option;
-              students[i].Comments = comment;
-              break;
-            }
-          }
-          data.results[0].Students = students;
-
-           $http.put('https://api-us.clusterpoint.com/v4/102225/learntron[X999_Y999]', data.results[0], {
-            headers: {'Authorization': 'Basic dGVzdHVzZXI6MTIzNA=='}})
-          .success(function (data, status, headers, config) {
-            console.log('saving data to customer', JSON.stringify(data), JSON.stringify(status));
-          }).error(function (data, status, headers, config) {
-              console.log('There was a problem posting your information' + JSON.stringify(data) + JSON.stringify(status));
-          });
-        })
-        .error(function (data) {
-            alert("Error: " + JSON.stringify(data));
-        });
-
-        if($scope.option == "0") {
-
-             $http.get('http://127.0.0.1:3111/no')
-            .success(function (data) {
-              console.log('success');
-            }).error(function (data) {
-                console.log('fail');
-            });
-        }
-
-        var sending = {};
-        
-      $http.post('http://gateway-a.watsonplatform.net/calls/text/TextGetTextSentiment?apikey=6dba745bbd9815883215760f648c975414379579&outputMode=json&text=' + comment)
-            .success(function (data, status, headers, config) {
-              console.log('IBM data', JSON.stringify(data.docSentiment)); 
-              $scope.sentiment = data.docSentiment;
-                          
-            }).error(function (data, status, headers, config) {
-              alert('Ibm error', JSON.stringify(data), JSON.stringify(status));
-            });
-  }
-
 })
 
-.controller('CustomerCtrl', function($scope, $http, $window, $ionicSlideBoxDelegate, $ionicModal) {
+.controller('CustomerCtrl', function($scope, $http, $window, $ionicSlideBoxDelegate, $ionicModal, $ionicPlatform) {
   var _self = this;
   $scope.X;
   $scope.Y;
@@ -233,7 +169,7 @@ function onSuccess(acceleration) {
 
     if($scope.Z < -3) {
       if(!_self.surveySubmitted){ 
-        $scope.submitSurvey();
+       
       }
     }
 
@@ -249,13 +185,13 @@ function onSuccess(acceleration) {
     if ($scope.X > 3 && $scope.X < 5) {
       $scope.dynamic -= 4;
     } 
-    // if($scope.X  < -9) {
-    //    $ionicSlideBoxDelegate.next();
-    // }
+    if($scope.Y  < 0 && $scope.Z > 9) {
+       $ionicSlideBoxDelegate.next();
+    }
 
-    // if($scope.X  > 9) {
-    //    $ionicSlideBoxDelegate.previous();
-    // }
+    if($scope.Z < -4.7) {
+       $ionicSlideBoxDelegate.previous();
+    }
     if($scope.dynamic > 100) {
       $scope.dynamic = 100;
     } else if($scope.dynamic <0) {
@@ -268,6 +204,8 @@ function onSuccess(acceleration) {
     } else {
       type = 'success';
     }
+    $scope.detectShake(acceleration); 
+
     $scope.type = type;
     $scope.$apply();
 }
@@ -279,16 +217,98 @@ function onError() {
 var options = { frequency: 500 };  // Update every 3 seconds
 
 var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+
+//////////////////////
+
+  // watch Acceleration
+  $scope.options = { 
+    frequency: 100, // Measure every 100ms
+        deviation : 25  // We'll use deviation to determine the shake event, best values in the range between 25 and 30
+  };
+
+  // Current measurements
+  $scope.measurements = {
+    x : null,
+    y : null,
+    z : null,
+    timestamp : null
+  }
+
+  // Previous measurements  
+  $scope.previousMeasurements = {
+    x : null,
+    y : null,
+    z : null,
+    timestamp : null
+  } 
+  
+  // Watcher object
+  $scope.watch = null;
+  
+  // Start measurements when Cordova device is ready
+    $ionicPlatform.ready(function() {
+    
+    //Start Watching method
+    $scope.startWatching = function() {   
+
+        // Device motion configuration
+var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+        
+    };    
+
+
+    
+    // Stop watching method
+    $scope.stopWatching = function() {  
+      $window.navigator.accelerometer.clearWatch(watchID);
+        }   
+    
+    // Detect shake method    
+    $scope.detectShake = function(result) { 
+    
+        //Object to hold measurement difference between current and old data
+            var measurementsChange = {};
+      
+      // Calculate measurement change only if we have two sets of data, current and old
+      if ($scope.previousMeasurements.x !== null) {
+        measurementsChange.x = Math.abs($scope.previousMeasurements.x, result.x);
+        measurementsChange.y = Math.abs($scope.previousMeasurements.y, result.y);
+        measurementsChange.z = Math.abs($scope.previousMeasurements.z, result.z);
+      }
+      
+      // If measurement change is bigger then predefined deviation
+      if (measurementsChange.x + measurementsChange.y + measurementsChange.z > $scope.options.deviation) {
+        //$scope.stopWatching();  // Stop watching because it will start triggering like hell
+      console.log('Shake detected'); // shake detected
+        //setTimeout($scope.startWatching(), 1000);  // Again start watching after 1 sex
+         $scope.submitSurvey();
+        
+        // Clean previous measurements after succesfull shake detection, so we can do it next time
+        $scope.previousMeasurements = { 
+          x: null, 
+          y: null, 
+          z: null
+        }       
+        
+      } else {
+        // On first measurements set it as the previous one
+        $scope.previousMeasurements = {
+          x: result.x,
+          y: result.y,
+          z: result.z
+        }
+      }     
+      
+        }   
+    
+    });
+  
+  $scope.$on('$ionicView.beforeLeave', function(){
+      $window.navigator.accelerometer.clearWatch(watchID);
+  }); 
+
 })
 
-.controller('DashCtrl', function($scope) {
-})
-
-.controller('ChatsCtrl', function($scope) {
-})
-
-.controller('ChatDetailCtrl', function($scope, $stateParams) {
-})
 
 .controller('AccountCtrl', function($scope) {
   $scope.settings = {

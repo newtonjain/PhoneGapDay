@@ -1,7 +1,9 @@
 <ion-view view-title="Feedback TIme">
   <ion-content>
 
-    <button class="button button-royal button-block">Rate the current topic</button>
+    <center>  
+    <h1>Rate the current topic</h1>
+    </center>
     <br>
     <h3 class="item">{{ prev < questions.length - 1  ? "Tilt device left or right to fill the bar." : "Raise your device to submit responses." }}</h3>
 
@@ -25,11 +27,14 @@
         </div>
       </ion-slide>
     </ion-slide-box> 
-
+    <p>
+      
+<!-- {{Z}}
+    </p>
 <div class="button-bar">
 <button ng-click="previous()" class="button">&#60; Previous </button>
-<button ng-click="next()" class="button">Next &#62;</button>
-</div>     
+<button ng-click="next()" ng-show="prev < questions.length - 1" class="button">Next &#62;</button>
+</div>   -->   
 <!-- 
  <br>
     <button class="button button-block" ng-click="submitSurvey()">Submit</button> -->
