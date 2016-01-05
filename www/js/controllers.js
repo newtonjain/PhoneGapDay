@@ -206,9 +206,6 @@ var options = { frequency: 500 };  // Update every 3 seconds
 var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 
   
-$scope.$on('$ionicView.beforeLeave', function(){
-    $window.navigator.accelerometer.clearWatch(watchID);
-}); 
 
 //////////////////////
 
@@ -278,43 +275,14 @@ $scope.$on('$ionicView.beforeLeave', function(){
     }   
   });
 
-var preload_time = 3000; // How long preload is shown
-var preload_fade_speed = 400; // Preload fadeout speed
 
-// setTimeout(function(){
-//   $('.loader').fadeOut(preload_fade_speed); // Fade out preloader
-//   //open_modal(); // Open tutorial
-// },preload_time);
 
-// End preloader
-
-// Tutorial modal
-
-// function open_modal(){
-//   $('.tut').addClass('poptut'); // Remove
-//   $('.question').fadeOut(400); // Fadeout
-// }
-
-// function close_modal(){
   $('.question').fadeIn(400); // Fadeout
-  $('.tut').removeClass('poptut'); // Remove
   $('h1,h2').addClass('popone'); // Intro
   $('.character').addClass('poptwo'); // Intro
   $('.rating').addClass('popthree'); // Intro
   $('.next,.prev').addClass('popfour'); // Intro
-// }
 
-// $('.tut p').click(function(){
-//   close_modal(); // Close modal
-// });
-
-// $('.question p').click(function(){
-//   open_modal(); // Open modal
-// })
-
-// End tutorial modal
-
-// Page slider
 
 var slide_amount = $('.feedbackform_slide').length; // Slide count
 var window_width = $(window).width(); // Init window width
@@ -323,52 +291,6 @@ var current_position = 0; // Current position
 
 $('.feedbackform').css('width',window_width * slide_amount + 'px'); // Set up the slides
 $('.feedbackform_slide').css('width',window_width + 'px'); // Set up the slides
-
-$('.next').click(function(){
-  update_answers();
-  var window_width = $(window).width(); // Re assess window width
-  if(current_position < slide_amount - 1){
-    current_position++;
-    current_x = current_position * window_width;
-    $('.feedbackform_slide').css('right',current_x);
-    $('.active_slide').removeClass('active_slide').next().addClass('active_slide');
-    setTimeout(function(){
-      $('.active_slide').find('.popone').removeClass('popone'); // Reset animations
-      $('.active_slide').find('.poptwo').removeClass('poptwo'); // Reset animations
-      $('.active_slide').find('.popthree').removeClass('popthree'); // Reset animations
-      $('.active_slide').find('.popfour').removeClass('popfour'); // Reset animations
-    },10)
-    setTimeout(function(){
-      $('h1,h2').addClass('popone'); // Reset animations
-      $('.character,a.follow,a.download').addClass('poptwo'); // Reset animations
-      $('.rating').addClass('popthree'); // Reset animations
-      $('.next,.prev').addClass('popfour'); // Reset animations
-    },410)
-  }
-});
-
-$('.prev').click(function(){
-  update_answers();
-  var window_width = $(window).width();
-  if(current_position > 0){
-    current_position--;
-    current_x = current_position * window_width;
-    $('.feedbackform_slide').css('right',current_x);
-    $('.active_slide').removeClass('active_slide').prev().addClass('active_slide');
-    setTimeout(function(){
-      $('.active_slide').find('.popone').removeClass('popone'); // Reset animations
-      $('.active_slide').find('.poptwo').removeClass('poptwo'); // Reset animations
-      $('.active_slide').find('.popthree').removeClass('popthree'); // Reset animations
-      $('.active_slide').find('.popfour').removeClass('popfour'); // Reset animations
-    },10)
-    setTimeout(function(){
-      $('h1,h2').addClass('popone'); // Reset animations
-      $('.character,a.follow,a.download').addClass('poptwo'); // Reset animations
-      $('.rating').addClass('popthree'); // Reset animations
-      $('.next,.prev').addClass('popfour'); // Reset animations
-    },410)
-  }
-});
 
 $(window).resize(function(){ // Responisivity
   var window_width = $(window).width(); // Window width
@@ -413,18 +335,6 @@ var monkey_messages = ['terrible','bad','not great','average','good','excellent'
 var rabbit_messages = ['dissapointed','unhappy','not great','average','pleased','happy','super happy']; // Rabbit array
 var panda_messages = ['terrible','bad','not great','average','good','excellent','amazing']; // Panda array
 var lion_messages = ['very dirty','dirty','needs work','average','clean','very clean','Superb']; // Lion array
-
-// The smile
-
-$('input').mousedown(function(){
-  $('input').css('cursor','-webkit-grabbing'); // Change cursor
-  $('input').css('cursor','-moz-grabbing'); // Change cursor
-});
-
-$('input').mouseup(function(){
-  $('input').css('cursor','-webkit-grab'); // Change cursor
-  $('input').css('cursor','-moz-grab'); // Change cursor
-});
 
 var smile_value;
 
@@ -474,9 +384,9 @@ var smile_value;
 
 // Clear interval
 
-$('input').mouseup(function(){
-  clearInterval(s); // Clear intervals
-});
+// $('input').mouseup(function(){
+//   clearInterval(s); // Clear intervals
+// });
 
 })
 
