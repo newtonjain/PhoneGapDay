@@ -20,7 +20,7 @@
         <div class="item item-text-wrap item-icon-right" style="margin-left: -15px" ng-show="question.Rating">
         <b>Your Rating:</b> 
         <p>
-        <h1 ng-class="question.Rating > 45 ? 'balanced' : 'assertive'">{{question.Rating}} / {{max}}</h1>  
+        <h1 ng-class="question.Rating > 5 ? 'balanced' : 'assertive'">{{question.Rating}} / {{max}}</h1>  
         </p>
         <i class="icon ion-refresh icon-accessory" ng-click="rateAgain()"></i>
         </div>
@@ -28,6 +28,33 @@
       </ion-slide>
     </ion-slide-box> 
 
+  <div class='feedbackform'>
+    <div class='feedbackform_slide'>
+    <img class='sb panda' src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/hexback.svg'>
+    <div class='grad panda'></div>
+    <div class='feedbackform_slide__inner'>
+      <h1 class='question_s'></h1>
+      <h2>Drag the shy pandas mouth up or down to reflect your satisfaction!</h2>
+      <div class='character'>
+        <div class='character_image'>
+          <img src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/panda.svg'>
+        </div>
+        <div class='character_smile'>
+          <div class='smiler_input'>
+            <input class='panda' max='20' min='0' type='range'>
+            <svg class='smile panda' height='20px' version='1.1' width='70px' xmlns='http://www.w3.org/2000/svg'>
+              <path d='M10 10 C 20 10, 40 10, 50 10' fill='transparent' stroke-linecap='round' stroke-width='4' stroke='black'></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class='rating panda'>
+        <span>Average</span>
+      </div>
+    </div>
+  </div>
+
+</div>
 <!-- 
     <div class="button-bar">
         <button ng-click="previous()" class="button">&#60; Previous </button>
