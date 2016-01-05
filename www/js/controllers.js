@@ -189,18 +189,11 @@ function onSuccess(acceleration) {
     if ($scope.X > 3) {
       $scope.dynamic -= 1;
     } 
-    if($scope.Y  < 0 && $scope.Z > 9) {
-       $ionicSlideBoxDelegate.next();
-    }
-
-    if($scope.Z < -4.7) {
-       $ionicSlideBoxDelegate.previous();
-    }
 
     if($scope.dynamic > 10) {
       $scope.dynamic = 10;
-    } else if($scope.dynamic <0) {
-      $scope.dynamic = 0;
+    } else if($scope.dynamic <0 || $scope.dynamic == 0) {
+      $scope.dynamic = 1;
     }
     var type;
 
