@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth) {
+.controller('AppCtrl', function($scope, $rootScope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth, $cordovaLocalNotification) {
 
   var _self = this;
   _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
@@ -16,6 +16,24 @@ angular.module('starter.controllers', [])
       $scope.modallogin = modallogin;
       $scope.modallogin.show();
   });
+
+  $scope.scheduleDelayedNotification = function () {
+  console.log('wait 10 seconds');
+      var now = new Date().getTime();
+      var _10SecondsFromNow = new Date(now + 10 * 1000);
+
+      $cordovaLocalNotification.schedule({
+        id: 1,
+        title: 'Microsoft Cordova Team',
+        text: 'You will get push notification',
+        badge: 1,
+        at: _10SecondsFromNow
+      }).then(function (result) {
+        // ...
+      });
+    };
+
+    $scope.scheduleDelayedNotification();
 
   //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
   //used to get more advanced information. Second call has some limitations at the moment. 
@@ -236,6 +254,7 @@ var watchID = $window.navigator.accelerometer.watchAcceleration(onSuccess, onErr
   
   // Start measurements when Cordova device is ready
   $ionicPlatform.ready(function() {
+    console.log('Ionic platform ready');
     
     // Detect shake method    
     $scope.detectShake = function(result) { 
