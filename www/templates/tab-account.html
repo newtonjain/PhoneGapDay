@@ -1,9 +1,6 @@
 <ion-view view-title="Account">
-
-    <ion-content>
-        
+    <ion-content>       
         <div class="list card">
-
             <center>
                 <h2>{{authData.displayName}}</h2>
                 <p><strong>Email: </strong>{{authData.email}}</p>
@@ -12,9 +9,7 @@
             <div class="item item-body">
                 <center>
                     <img src="{{ authData.cover}}" style="width:200px" class="headshot menu-item">
-                    <p align="middle" style="width:50%">
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-                    </p>
+                    <p><strong>Gender: </strong>{{authData.gender}}</p>
                 </center>
             </div>
         </div>
