@@ -1,0 +1,52 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-app-event": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-device-motion": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "de.appplant.cordova.plugin.local-notification": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-code-push": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        }
+    },
+    "dependent_plugins": {
+        "code-push": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-zip": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.ionicframework.myapp925502"
+        }
+    }
+}

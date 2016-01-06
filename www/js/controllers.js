@@ -1,13 +1,39 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $rootScope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth) {
+.controller('AppCtrl', function($scope, $rootScope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth, $cordovaLocalNotification) {
 
   var _self = this;
   _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
   _self.questions = new Firebase("https://poll2roll.firebaseio.com/questions");
+  _self.pushNotify = new Firebase("https://poll2roll.firebaseio.com/pushNotify");
 
   $scope.users = $firebaseArray(_self.users);
   $scope.questions = $firebaseArray(_self.questions);
+
+  var pushing = _self.pushNotify;
+
+  pushing.on('value', function(dataSnapshot) {
+  // code to handle new value.
+  var value = dataSnapshot.val();
+  console.log('pushNotify', value, Object.keys(value).length);
+
+  var now = new Date().getTime();
+  var date = new Date();
+      var _10SecondsFromNow = new Date(now + 30 * 1000);
+      var notificationDate = new Date(value[1].Time);
+      console.log('here and now',_10SecondsFromNow, notificationDate);
+      
+
+      $cordovaLocalNotification.schedule({
+        id: 1,
+        title: value[1].Title,
+        text: value[1].Body,
+        firstAt: notificationDate
+      }).then(function (result) {
+        console.log('result is this', result);
+      });
+
+  });
 
   //Opens the login modal as soon as the controller initializes
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -16,6 +42,8 @@ angular.module('starter.controllers', [])
       $scope.modallogin = modallogin;
       $scope.modallogin.show();
   });
+
+
 
   //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
   //used to get more advanced information. Second call has some limitations at the moment. 
