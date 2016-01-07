@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $rootScope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Items, Auth, $cordovaLocalNotification) {
+.controller('AppCtrl', function($scope, $rootScope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Auth, $cordovaLocalNotification) {
 
   var _self = this;
   _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
@@ -10,30 +10,36 @@ angular.module('starter.controllers', [])
   $scope.users = $firebaseArray(_self.users);
   $scope.questions = $firebaseArray(_self.questions);
 
-  var pushing = _self.pushNotify;
+  var notifications = _self.pushNotify;
 
-  pushing.on('value', function(dataSnapshot) {
-  // code to handle new value.
-  var value = dataSnapshot.val();
-  console.log('pushNotify', value, Object.keys(value).length);
+  notifications.on('value', function(dataSnapshot) {
+    var value = dataSnapshot.val();
 
-  var now = new Date().getTime();
-  var date = new Date();
-      var _10SecondsFromNow = new Date(now + 30 * 1000);
-      var notificationDate = new Date(value[1].Time);
-      console.log('here and now',_10SecondsFromNow, notificationDate);
-      
-
-      $cordovaLocalNotification.schedule({
-        id: 1,
-        title: value[1].Title,
-        text: value[1].Body,
-        firstAt: notificationDate
-      }).then(function (result) {
-        console.log('result is this', result);
-      });
-
+    console.log('pushNotify', value, Object.keys(value).length);
+    notificationReceived(value);
   });
+
+
+  var notificationReceived = function(value) {
+    var now = new Date().getTime();
+    var date = new Date();
+    var _10SecondsFromNow = new Date(now + 30 * 1000);
+    var notificationDate = new Date(value[1].Time);
+    console.log('here and now',_10SecondsFromNow, notificationDate);
+
+    angular.forEach(value, function(value, key) {
+      console.log(key,': ',value);
+
+      if(value.Activate) {
+        $cordovaLocalNotification.schedule({
+        id: key,
+        title: value.Title,
+        text: value.Body,
+        firstAt: notificationDate
+        });
+      }
+    });
+  }
 
   //Opens the login modal as soon as the controller initializes
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -42,8 +48,6 @@ angular.module('starter.controllers', [])
       $scope.modallogin = modallogin;
       $scope.modallogin.show();
   });
-
-
 
   //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
   //used to get more advanced information. Second call has some limitations at the moment. 
@@ -325,10 +329,10 @@ angular.module('starter.controllers', [])
         if(smile_value == 0){
             // Worst
             $('.rating.' + active_smile + ' span').html(active_array[0]); // Set message
-        } else if(smile_value < 10 && smile_value > 5){
+        } else if(smile_value < 5 && smile_value > 0){
             // Bad
             $('.rating.' + active_smile + ' span').html(active_array[1]); // Set message
-        } else if(smile_value < 5 && smile_value > 0){
+        } else if(smile_value < 10 && smile_value > 5){
             // Not good
             $('.rating.' + active_smile + ' span').html(active_array[2]); // Set message
         } else if(smile_value == 10){

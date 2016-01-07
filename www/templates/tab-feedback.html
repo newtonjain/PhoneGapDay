@@ -1,4 +1,4 @@
-<ion-view view-title="Feedback Time">
+<ion-view view-title="Tilt your device left or right">
   <ion-content>
     <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
         <ion-slide ng-repeat="question in questions track by $index">
@@ -17,12 +17,12 @@
                 
                 <div class='feedbackform'>
                     <div class='feedbackform_slide'>
-                        <img class='sb panda' src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/hexback.svg'>
+                        <img class='sb panda' src='img/hexback.svg'>
                         <div class='grad panda'></div>
                         <div class='feedbackform_slide__inner'>
                             <div class='character'>
                                 <div class='character_image'>
-                                    <img src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/panda.svg'>
+                                    <img src='img/panda.svg'>
                                 </div>
                                 <div class='character_smile'>
                                     <div class='smiler_input'>
@@ -36,8 +36,8 @@
                             
                             <div class='rating panda'>
                                 <span>Average</span>
-                                <img ng-click="next()" class='next' src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/greenbutton3.png'>
-                                <img ng-click="previous()"  class='prev' src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/greenbutton4.png'>
+                                <img ng-click="next()" class='next' src='img/greenbutton3.png'>
+                                <img ng-click="previous()"  class='prev' src='img/greenbutton4.png'>
                             </div>
                         </div>
                     </div>
