@@ -1,14 +1,14 @@
-<ion-view view-title="Tilt your device left or right">
+<ion-view view-title="Tilt your device to provide feedback">
   <ion-content>
     <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
         <ion-slide ng-repeat="question in questions track by $index">
 
             <div class="card item item-body padding_vertical transparent">
                 <h3>Question {{$index + 1}}/{{questions.length}}: 
-                    <p><h2>{{question.$value}}</h2></p>
+                    <p><h2 style="font-size: 17px">{{question.$value}}</h2></p>
                 </h3>
 
-                <uib-progressbar max="max" ng-hide="question.Rating" value="dynamic" type="{{type}}" style="height: 20px; margin-top: 25px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
+                <uib-progressbar max="max" animate="true" ng-hide="question.Rating" value="dynamic" type="{{type}}" style="height: 20px; margin-top: 25px"><span >{{dynamic}} / {{max}}</span></uib-progressbar>
 
                 <div class="item item-text-wrap item-icon-right transparent" style="margin-left: -15px" ng-show="question.Rating">
                     <b>Your Rating:</b> <h1 ng-class="question.Rating > 5 ? 'balanced' : 'assertive'" style="margin: 0">{{question.Rating}} / {{max}}</h1>  
@@ -44,8 +44,18 @@
                 </div>
             </div>
         </ion-slide>
+        <ion-slide>
+
+        <div class="list card">
+          <div class="item">
+            <h2><center>Shake device to submit responses</center></h2>
+          </div>
+          <div class="item item-image">
+            <img src='img/shake.gif'>
+          </div>
+        </div>
+
+        </ion-slide>
     </ion-slide-box> 
-    <br>
-    <h3 class="title">{{ prev < questions.length - 1  ? "Tilt device left or right to fill the bar." : "Raise your device to submit responses." }}</h3>    
   </ion-content>
 </ion-view>

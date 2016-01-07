@@ -125,22 +125,30 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('FeedbackCtrl', function($scope, $http, $window, $ionicSlideBoxDelegate, $ionicModal, $ionicPlatform) {
+.controller('FeedbackCtrl', function($scope, $http, $window, $ionicSlideBoxDelegate, $ionicModal) {
     var _self = this;
-    $scope.X;
-    $scope.Y;
-    $scope.Z;
+    var X;
+    var Y;
+    var Z;
     $scope.dynamic = 5;
     $scope.max = 10;
     _self.surveySubmitted = false;
     $scope.prev = 0;
 
     $scope.slideHasChanged = function(index) {
+        console.log('yes yes', index);
+
         if(!$scope.questions[$scope.prev].Rating){
             $scope.questions[$scope.prev].Rating = $scope.dynamic;
         }
+      if(index<$scope.questions.length) {
         $scope.prev = index;
         $scope.dynamic = 5;
+      } else {
+        console.log('no no', index);
+      }
+
+
     }
 
     $scope.closeLogin = function() {
@@ -161,20 +169,18 @@ angular.module('starter.controllers', [])
     $scope.submitSurvey = function() {
         var send={};
 
-        $scope.questions[$scope.prev].Rating = $scope.dynamic;
-
         for(var i = 0; i < $scope.questions.length; i++) {
             var val = $scope.questions[i];
             send[val.$id] = val.Rating || 'NA';
         }
 
-    $scope.users[$scope.index].feedback = send;
-    console.log('///', $scope.users[$scope.index].feedback);
+      $scope.users[$scope.index].feedback = send;
+      console.log('///', $scope.users[$scope.index].feedback);
 
-    $scope.users.$save($scope.index).then(function() {
-        $scope.modal.show();
-        _self.surveySubmitted = true;
-        });
+      $scope.users.$save($scope.index).then(function() {
+          $scope.modal.show();
+          _self.surveySubmitted = true;
+          });
     }
 
     $scope.previous = function() {
@@ -186,15 +192,15 @@ angular.module('starter.controllers', [])
     }
 
     function onSuccess(acceleration) {
-        $scope.X = acceleration.x;
-        $scope.Y = acceleration.y;
-        $scope.Z = acceleration.z;
+        X = acceleration.x;
+        Y = acceleration.y;
+        Z = acceleration.z;
 
-        if($scope.X < -3) {
+        if(X < -3) {
             $scope.dynamic += 1;
         } 
         
-        if ($scope.X > 3) {
+        if (X > 3) {
             $scope.dynamic -= 1;
         } 
 
@@ -221,7 +227,7 @@ angular.module('starter.controllers', [])
         console.log('accelerometer not working');
     }
 
-    var options = { frequency: 500 };  // Update every 500 milliseconds
+    var options = { frequency: 900 };  // Update every 500 milliseconds
     $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 
     // watch Acceleration
@@ -246,9 +252,7 @@ angular.module('starter.controllers', [])
         timestamp : null
     } 
   
-    // Start measurements when Cordova device is ready
-    $ionicPlatform.ready(function() {
-        console.log('Ionic platform ready');
+
 
         // Detect shake method    
         $scope.detectShake = function(result) { 
@@ -286,13 +290,11 @@ angular.module('starter.controllers', [])
                 }
             }         
         }
-    });
+
     
-    $('.question').fadeIn(400); // Fadeout
-    $('h1,h2').addClass('popone'); // Intro
-    $('.character').addClass('poptwo'); // Intro
-    $('.rating').addClass('popthree'); // Intro
-    $('.next,.prev').addClass('popfour'); // Intro
+    // $('.character').addClass('poptwo'); // Intro
+    // $('.rating').addClass('popthree'); // Intro
+    // $('.next,.prev').addClass('popfour'); // Intro
 
 
     var slide_amount = $('.feedbackform_slide').length; // Slide count
@@ -348,7 +350,7 @@ angular.module('starter.controllers', [])
             // Amazing
             $('.rating.' + active_smile + ' span').html(active_array[6]); // Set message
         }        
-    }, 100)
+    }, 200)
 })
 
 
