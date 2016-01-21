@@ -1,17 +1,13 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http, $firebaseArray, $ionicModal, $cordovaLocalNotification) {
+.controller('AppCtrl', function($scope, $firebaseArray, $ionicModal, $cordovaLocalNotification) {
 
   var _self = this;
-  _self.users;
-  _self.questions;
-  _self.pushNotify;
-    _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
-  _self.questions = new Firebase("https://poll2roll.firebaseio.com/questions");
+  _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
   _self.pushNotify = new Firebase("https://poll2roll.firebaseio.com/pushNotify");
   
   $scope.users = $firebaseArray(_self.users);
-  $scope.questions = $firebaseArray(_self.questions);
+  
 
   var notifications = _self.pushNotify;
 
@@ -52,8 +48,7 @@ angular.module('starter.controllers', [])
       $scope.modallogin.show();
   });
 
-  //2 separate calls made to Facebook, First call gets the access token and some basic info and second call is 
-  //used to get more advanced information. Second call has some limitations at the moment. 
+  // Used to login 
   $scope.login = function() {
     var ref = new Firebase("https://poll2roll.firebaseio.com/");
 
@@ -62,33 +57,17 @@ angular.module('starter.controllers', [])
         console.log("Login Failed!", error);
       } else {
         // the access token will allow us to make Open Graph API calls.
-        console.log(authData.facebook.accessToken);
         console.log("Logged in as", authData);
-
-        $scope.authData = authData.facebook; // This will display the user's name in our view.
-        $http.get('https://graph.facebook.com/me?fields=cover,gender,age_range,birthday,picture.width(800).height(800)&access_token=' + authData.facebook.accessToken)
-        .success(function (data) {
-          console.log("got it when made a request to FB open graph", data);
-          $scope.authData.cover = data.picture.data.url;
-          $scope.authData.gender = data.gender;
-          $scope.authData.age = data.age_range;
-          $scope.authData.id = parseInt(data.id);
-          $scope.authData.profileImageURL = data.picture.data.url;
-          $scope.authData.description = "Bio";
-        })
-        .error(function (data) {
-          console.log("Error: " + JSON.stringify(data));
-        });
+        $scope.authData = authData.facebook;
+        $scope.$apply();
       }
     },
     {
-    scope: "email,user_birthday" // the permissions requested
+    scope: "email" // the permissions requested
     });
   };
 
   $scope.savefbinfo  = function() {
-            console.log('coming here');
-
     $scope.modallogin.hide();
     _self.userExists = false;
 
@@ -96,19 +75,14 @@ angular.module('starter.controllers', [])
       "facebook_id": $scope.authData.id,
       "name": $scope.authData.displayName,
       "email": $scope.authData.email,
-      "profile_picture_url": $scope.authData.profileImageURL,
-      "gender": $scope.authData.gender
+      "profile_picture_url": $scope.authData.profileImageURL
     };
-
-            console.log('coming here2');
 
     var ref = _self.users;
     ref.once("value", function(allUsersSnapshot) {
-      console.log('khjkjh', allUsersSnapshot.val());
-
       allUsersSnapshot.forEach(function(userSnapshot) {
         var name = userSnapshot.child("username").val();
-         console.log('////', name);
+         console.log('name = ', name);
          if(name == $scope.authData.displayName) {
           console.log('matching', userSnapshot.key());
            $scope.key = userSnapshot.key();
@@ -116,50 +90,49 @@ angular.module('starter.controllers', [])
           return true;
          }
       }) 
-        console.log('coming here3');
 
       if(!_self.userExists) {
-        console.log('coming here');
         $scope.users.$add({
           username: $scope.authData.displayName,
           userData: userData
         }).then(function(ref) {
             $scope.key = ref.key();
-            console.log("added record with id " + $scope.key, '/////', $scope.users.$indexFor($scope.key));
-            // returns location in the array
+            console.log("added record with id " + $scope.key, ' for user: ', $scope.users.$indexFor($scope.key));
             });
         }
-      });
-                console.log('coming here4');
+    });
 
-      //$scope.index = $scope.users.$indexFor($scope.key);
+    $scope.index = $scope.users.$indexFor($scope.key);
   };
 })
 
-.controller('FeedbackCtrl', function($scope, $http, $window, $ionicSlideBoxDelegate, $ionicModal) {
+.controller('FeedbackCtrl', function($scope, $window, $ionicSlideBoxDelegate, $ionicModal, Questions) {
     var _self = this;
     var X;
     var Y;
     var Z;
+    
     $scope.dynamic = 5;
     $scope.max = 10;
     _self.surveySubmitted = false;
     $scope.prev = 0;
+    
+    $scope.questions = Questions.all();
 
     $scope.slideHasChanged = function(index) {
-        console.log('yes yes', index);
+        console.log('slider changed for : ', index);
 
         if(!$scope.questions[$scope.prev].Rating){
             $scope.questions[$scope.prev].Rating = $scope.dynamic;
         }
-      if(index<$scope.questions.length) {
-        $scope.prev = index;
-        $scope.dynamic = 5;
-      } else {
-        console.log('no no', index);
-      }
-
-
+        
+        if(index<$scope.questions.length) {
+            $scope.prev = index;
+            $scope.dynamic = 5;
+        } 
+        else {
+            console.log('no change for index: ', index);
+        }
     }
 
     $scope.closeLogin = function() {
@@ -239,7 +212,7 @@ angular.module('starter.controllers', [])
     }
 
     var options = { frequency: 500 };  // Update every 500 milliseconds
-    //$window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+    navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 
     // watch Acceleration
     $scope.options = { 
@@ -263,50 +236,42 @@ angular.module('starter.controllers', [])
         timestamp : null
     } 
   
+    // Detect shake method    
+    $scope.detectShake = function(result) { 
 
+        //Object to hold measurement difference between current and old data
+        var measurementsChange = {};
 
-        // Detect shake method    
-        $scope.detectShake = function(result) { 
-
-            //Object to hold measurement difference between current and old data
-            var measurementsChange = {};
-
-            // Calculate measurement change only if we have two sets of data, current and old
-            if ($scope.previousMeasurements.x !== null) {
-                measurementsChange.x = Math.abs($scope.previousMeasurements.x, result.x);
-                measurementsChange.y = Math.abs($scope.previousMeasurements.y, result.y);
-                measurementsChange.z = Math.abs($scope.previousMeasurements.z, result.z);
-            }
-
-            // If measurement change is bigger then predefined deviation
-            if (measurementsChange.x + measurementsChange.y + measurementsChange.z > $scope.options.deviation) {
-                //$scope.stopWatching();  // Stop watching because it will start triggering like hell
-                console.log('Shake detected'); // shake detected
-                //setTimeout($scope.startWatching(), 1000);  // Again start watching after 1 sex
-                $scope.submitSurvey();
-
-                // Clean previous measurements after succesfull shake detection, so we can do it next time
-                $scope.previousMeasurements = { 
-                    x: null, 
-                    y: null, 
-                    z: null
-                }       
-
-            } else {
-                // On first measurements set it as the previous one
-                $scope.previousMeasurements = {
-                    x: result.x,
-                    y: result.y,
-                    z: result.z
-                }
-            }         
+        // Calculate measurement change only if we have two sets of data, current and old
+        if ($scope.previousMeasurements.x !== null) {
+            measurementsChange.x = Math.abs($scope.previousMeasurements.x, result.x);
+            measurementsChange.y = Math.abs($scope.previousMeasurements.y, result.y);
+            measurementsChange.z = Math.abs($scope.previousMeasurements.z, result.z);
         }
 
-    
-    // $('.character').addClass('poptwo'); // Intro
-    // $('.rating').addClass('popthree'); // Intro
-    // $('.next,.prev').addClass('popfour'); // Intro
+        // If measurement change is bigger then predefined deviation
+        if (measurementsChange.x + measurementsChange.y + measurementsChange.z > $scope.options.deviation) {
+            //$scope.stopWatching();  // Stop watching because it will start triggering like hell
+            console.log('Shake detected'); // shake detected
+            //setTimeout($scope.startWatching(), 1000);  // Again start watching after 1 sex
+            $scope.submitSurvey();
 
+            // Clean previous measurements after succesfull shake detection, so we can do it next time
+            $scope.previousMeasurements = { 
+                x: null, 
+                y: null, 
+                z: null
+            }       
+
+        } else {
+            // On first measurements set it as the previous one
+            $scope.previousMeasurements = {
+                x: result.x,
+                y: result.y,
+                z: result.z
+            }
+        }         
+    }
 
     var slide_amount = $('.feedbackform_slide').length; // Slide count
     var window_width = $(window).width(); // Init window width
