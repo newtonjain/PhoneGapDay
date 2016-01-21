@@ -6,6 +6,8 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var fs = require("fs");
+var Server = require('karma').Server;
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -49,3 +51,16 @@ gulp.task('git-check', function(done) {
   }
   done();
 });
+
+/**
+ * Run test once and exit - karma.conf.js should be modified as appropriate for where you've placed your tests
+ */
+gulp.task('test', function (done) {
+  new Server({
+    configFile: __dirname + '/tests/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
+
+gulp.task('default', ['test']);
+

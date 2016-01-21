@@ -1,12 +1,15 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $rootScope, $http, $firebaseObject, $firebaseArray, $ionicActionSheet, $ionicModal, Auth, $cordovaLocalNotification) {
+.controller('AppCtrl', function($scope, $http, $firebaseArray, $ionicModal, $cordovaLocalNotification) {
 
   var _self = this;
-  _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
+  _self.users;
+  _self.questions;
+  _self.pushNotify;
+    _self.users = new Firebase("https://poll2roll.firebaseio.com/users");
   _self.questions = new Firebase("https://poll2roll.firebaseio.com/questions");
   _self.pushNotify = new Firebase("https://poll2roll.firebaseio.com/pushNotify");
-
+  
   $scope.users = $firebaseArray(_self.users);
   $scope.questions = $firebaseArray(_self.questions);
 
@@ -84,6 +87,8 @@ angular.module('starter.controllers', [])
   };
 
   $scope.savefbinfo  = function() {
+            console.log('coming here');
+
     $scope.modallogin.hide();
     _self.userExists = false;
 
@@ -94,6 +99,8 @@ angular.module('starter.controllers', [])
       "profile_picture_url": $scope.authData.profileImageURL,
       "gender": $scope.authData.gender
     };
+
+            console.log('coming here2');
 
     var ref = _self.users;
     ref.once("value", function(allUsersSnapshot) {
@@ -109,8 +116,10 @@ angular.module('starter.controllers', [])
           return true;
          }
       }) 
+        console.log('coming here3');
 
       if(!_self.userExists) {
+        console.log('coming here');
         $scope.users.$add({
           username: $scope.authData.displayName,
           userData: userData
@@ -121,7 +130,9 @@ angular.module('starter.controllers', [])
             });
         }
       });
-      $scope.index = $scope.users.$indexFor($scope.key);
+                console.log('coming here4');
+
+      //$scope.index = $scope.users.$indexFor($scope.key);
   };
 })
 
@@ -227,8 +238,8 @@ angular.module('starter.controllers', [])
         console.log('accelerometer not working');
     }
 
-    var options = { frequency: 900 };  // Update every 500 milliseconds
-    $window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+    var options = { frequency: 500 };  // Update every 500 milliseconds
+    //$window.navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 
     // watch Acceleration
     $scope.options = { 
