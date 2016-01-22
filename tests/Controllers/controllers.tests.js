@@ -37,7 +37,7 @@ describe("Controllers: AppCtrl", function() {
     var successCallback = {
        then: function(modallogin){
             scope.modallogin = modallogin;
-            
+
             modallogin.hide = function(){};
         }
     };
@@ -64,6 +64,10 @@ describe("Controllers: AppCtrl", function() {
     })
 })
 
+
+
+/////////////////////////////////////////////
+
 describe('Controllers: FeedbackCtrl', function(){
     var scope;
     var ionicSlideBoxDelegate;
@@ -76,9 +80,10 @@ describe('Controllers: FeedbackCtrl', function(){
         $Modal.fromTemplateUrl.and.returnValue(successCallback);
         $provide.value('$ionicModal', $Modal);
 
+        ionicSlideBoxDelegate = jasmine.createSpyObj('$ionicSlideBoxDelegate', ['next', 'currentIndex', 'previous']);
 
         questions = jasmine.createSpyObj('Questions', ['all']);
-        questions.all.and.returnValue(successCallback3);
+        questions.all.and.returnValue(questionsArray);
         $provide.value('Questions', questions);
     }));
        
@@ -89,16 +94,11 @@ describe('Controllers: FeedbackCtrl', function(){
         }
     };
 
-    var successCallback3 = {
-        then: function() {
-            var questions = {
-                q1: 'Here is a test question',
-                q2: 'How are you',
-                q3: 'where are you from'
-            }
-        return questions;
-        }
-    };
+    var questionsArray = [
+        {q1: 'Here is a test question', Rating: null},
+        {q2: 'Here is a test question', Rating: null},
+        {q3: 'Here is a test question', Rating: null}         
+    ];
 
     function onSuccess() {
         var acceleration = { x: 12, y:13, z:14 };
@@ -108,8 +108,7 @@ describe('Controllers: FeedbackCtrl', function(){
 
     beforeEach(inject(function($rootScope, $controller, _$window_) {
         scope = $rootScope.$new();
-        $window = _$window_;
-        
+        $window = _$window_;        
         navigator = $window.navigator;
         
         $window.navigator = {
@@ -118,8 +117,6 @@ describe('Controllers: FeedbackCtrl', function(){
             } 
         };
 
-        ionicSlideBoxDelegate = jasmine.createSpyObj('ionicSlideBoxDelegate', ['next', 'currentIndex', 'previous']);
-
         FeedbackCtrl = $controller('FeedbackCtrl', {
             $scope: scope,
             $window : window,
@@ -127,34 +124,90 @@ describe('Controllers: FeedbackCtrl', function(){
             Questions : questions
         });
     }));
-    
-    it('can get an instance of my factory', inject(function(Questions) {
-        expect(Questions).toBeDefined();
-    }));
 
-    // tests start here
-    it('should have current rating to 5', function(){
-        expect(scope.dynamic).toEqual(5);
-        expect(scope.max).toEqual(10);
-    });
-    
-    it('should have survey submitted to false', function(){
-       expect(FeedbackCtrl.surveySubmitted).toBe(false);
-    });
-    
-     it('should reflect ionicSlideBoxDelegate', function(){
-        scope.next();
-        scope.$apply();
-        expect(ionicSlideBoxDelegate.next).toHaveBeenCalled();
+    describe('Upon initialization', function() {
+        it('should get an instance of my factory', inject(function(Questions) {
+            expect(Questions).toBeDefined();
+            expect(scope.questions.length).toBe(3);
+        }));
 
-        scope.previous();
-        scope.$apply();
-       expect(ionicSlideBoxDelegate.previous).toHaveBeenCalled();
-    });
+        it('should set the parameters of progress bar correctly', function(){
+            expect(scope.dynamic).toEqual(5);
+            expect(scope.max).toEqual(10);
+        });
+        
+        it('should flag survey submitted parameter to false', function(){
+           expect(FeedbackCtrl.surveySubmitted).toBe(false);
+        });
+    })
 
-    it('start from question on slide 1', function(){
-        scope.next();
-        scope.$apply();
-        expect(scope.prev).toEqual(0);
-    });
+    describe('SlideBoxDelegate', function() {
+         it('should move to next slide when next button is clicked', function(){
+            scope.next();
+            scope.$apply();
+            expect(ionicSlideBoxDelegate.next).toHaveBeenCalled();
+        });
+
+        it('should move to previous slide when previous button is clicked', function(){
+            scope.previous();
+            scope.$apply();
+            expect(ionicSlideBoxDelegate.previous).toHaveBeenCalled();
+        });
+
+        it('should start rendering questions on slide 1', function(){
+            expect(scope.prev).toEqual(0);
+        });
+
+        it('should update prev index appropriately', function(){
+            scope.slideHasChanged(1);
+            expect(scope.prev).toEqual(1);
+
+            scope.slideHasChanged(2);
+            expect(scope.prev).not.toEqual(1);
+        });
+
+        it('should reset the dynamic value to 5', function() {
+            scope.dynamic = 8;
+            scope.slideHasChanged(2);
+            expect(scope.dynamic).toEqual(5);
+        })
+
+        it('should not update anything once index goes past length of questions', function() {
+            scope.dynamic = 8;
+            scope.slideHasChanged(4); // number of questions = 3
+            expect(scope.prev).toEqual(0);
+            expect(scope.dynamic).toEqual(8);
+        })        
+    })
+    
+    describe('rateAgain', function() {
+        it('should reset the rating if rate again button is pressed', function() {
+            scope.questions[scope.prev].Rating = 8;
+            scope.rateAgain();
+            expect(scope.questions[scope.prev].Rating).toBeNull();
+        })
+    })
+
+    describe('detect shaking', function() {
+        function _shakeSetup() {
+            var result = { x: 11, y:11, z:11};
+            spyOn(scope, 'submitSurvey');
+            scope.detectShake(result);
+            scope.$apply();
+
+        }
+
+        it('should trigger submit survey when device is shaken past threshold values', function() {
+            scope.previousMeasurements = { x: 12, y:13, z:14};
+           _shakeSetup();
+            expect(scope.submitSurvey).toHaveBeenCalled();
+          
+        })
+
+        it('should not trigger submit survey when device is not shaken past threshold values', function() {
+            scope.previousMeasurements = { x: 1, y:2, z:3};
+            _shakeSetup(); 
+            expect(scope.submitSurvey).not.toHaveBeenCalled();
+        })
+    })
 });

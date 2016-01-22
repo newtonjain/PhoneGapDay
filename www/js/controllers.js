@@ -118,6 +118,7 @@ angular.module('starter.controllers', [])
     $scope.prev = 0;
     
     $scope.questions = Questions.all();
+    console.log('here comes the ', $scope.questions);
 
     $scope.slideHasChanged = function(index) {
         console.log('slider changed for : ', index);
@@ -151,20 +152,20 @@ angular.module('starter.controllers', [])
     });
 
     $scope.submitSurvey = function() {
-        var send={};
+      //   var send={};
 
-        for(var i = 0; i < $scope.questions.length; i++) {
-            var val = $scope.questions[i];
-            send[val.$id] = val.Rating || 'NA';
-        }
+      //   for(var i = 0; i < $scope.questions.length; i++) {
+      //       var val = $scope.questions[i];
+      //       send[val.$id] = val.Rating || 'NA';
+      //   }
 
-      $scope.users[$scope.index].feedback = send;
-      console.log('///', $scope.users[$scope.index].feedback);
+      // $scope.users[$scope.index].feedback = send;
+      // console.log('///', $scope.users[$scope.index].feedback);
 
-      $scope.users.$save($scope.index).then(function() {
-          $scope.modal.show();
-          _self.surveySubmitted = true;
-          });
+      // $scope.users.$save($scope.index).then(function() {
+      //     $scope.modal.show();
+      //     _self.surveySubmitted = true;
+      //     });
     }
 
     $scope.previous = function() {
@@ -212,6 +213,7 @@ angular.module('starter.controllers', [])
     }
 
     var options = { frequency: 500 };  // Update every 500 milliseconds
+    console.log('ahahahahah');
     navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 
     // watch Acceleration
