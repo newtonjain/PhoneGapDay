@@ -8,7 +8,6 @@ angular.module('starter.controllers', [])
   
   $scope.users = $firebaseArray(_self.users);
   
-
   var notifications = _self.pushNotify;
 
   notifications.on('value', function(dataSnapshot) {
@@ -17,7 +16,6 @@ angular.module('starter.controllers', [])
     console.log('pushNotify', value, Object.keys(value).length);
     notificationReceived(value);
   });
-
 
   var notificationReceived = function(value) {
     var now = new Date().getTime();
@@ -152,20 +150,19 @@ angular.module('starter.controllers', [])
     });
 
     $scope.submitSurvey = function() {
-      //   var send={};
+        var send={};
 
-      //   for(var i = 0; i < $scope.questions.length; i++) {
-      //       var val = $scope.questions[i];
-      //       send[val.$id] = val.Rating || 'NA';
-      //   }
+        for(var i = 0; i < $scope.questions.length; i++) {
+            var val = $scope.questions[i];
+            send[val.$id] = val.Rating || 'NA';
+        }
 
-      // $scope.users[$scope.index].feedback = send;
-      // console.log('///', $scope.users[$scope.index].feedback);
+      $scope.users[$scope.index].feedback = send;
 
-      // $scope.users.$save($scope.index).then(function() {
-      //     $scope.modal.show();
-      //     _self.surveySubmitted = true;
-      //     });
+      $scope.users.$save($scope.index).then(function() {
+          $scope.modal.show();
+          _self.surveySubmitted = true;
+          });
     }
 
     $scope.previous = function() {
@@ -213,7 +210,6 @@ angular.module('starter.controllers', [])
     }
 
     var options = { frequency: 500 };  // Update every 500 milliseconds
-    console.log('ahahahahah');
     navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 
     // watch Acceleration

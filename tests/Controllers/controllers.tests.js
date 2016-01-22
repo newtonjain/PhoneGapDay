@@ -1,5 +1,5 @@
 describe("Controllers: AppCtrl", function() {
-    var scope, fb, ctrl, $rootScope, $ionicModal, $controller, $httpBackend, expected={};
+    var scope, fbase, ctrl, $rootScope, $ionicModal, $controller, $httpBackend, expected={}, authData;
 
     beforeEach(function() {
         module('ngMock', "starter.controllers", function($provide) {
@@ -12,7 +12,7 @@ describe("Controllers: AppCtrl", function() {
 
             var modal = jasmine.createSpy('$cordovaLocalNotification').and.returnValue(expected);
             $provide.value('$cordovaLocalNotification', modal);
-
+            fbase = jasmine.createSpyObj('Firebase', ['on', '$add', 'authWithOAuthPopup', 'once']);
             _firebase(); 
         });
     });
@@ -26,7 +26,11 @@ describe("Controllers: AppCtrl", function() {
                 return;
             }
             this.authWithOAuthPopup = function() {
-                return;
+
+                authData = {
+                    id: 1
+                };
+                return authData;
             }
             this.once = function() {
                 return;
@@ -37,7 +41,6 @@ describe("Controllers: AppCtrl", function() {
     var successCallback = {
        then: function(modallogin){
             scope.modallogin = modallogin;
-
             modallogin.hide = function(){};
         }
     };
@@ -56,17 +59,20 @@ describe("Controllers: AppCtrl", function() {
     }));
 
 
-    describe("test firebase login", function() {
-        it("should make a call to firebase auth service", function() {
-            fb = jasmine.createSpyObj('Firebase', ['on', '$add', 'authWithOAuthPopup', 'once']);
-            expect(fb.$add).toBeDefined();
+    describe("test firebase", function() {
+        it('should initialize all firebase methods', function() {
+            expect(fbase.on).toBeDefined();
+            expect(fbase.$add).toBeDefined();
+            expect(fbase.authWithOAuthPopup).toBeDefined();
+
+        })
+        it("should make a call to firebase auth service and populate authData", function() {
+            scope.login();
+            expect(authData).toBeDefined();
+            expect(authData.id).toBe(1);
        })
     })
 })
-
-
-
-/////////////////////////////////////////////
 
 describe('Controllers: FeedbackCtrl', function(){
     var scope;
@@ -194,14 +200,12 @@ describe('Controllers: FeedbackCtrl', function(){
             spyOn(scope, 'submitSurvey');
             scope.detectShake(result);
             scope.$apply();
-
         }
 
         it('should trigger submit survey when device is shaken past threshold values', function() {
             scope.previousMeasurements = { x: 12, y:13, z:14};
            _shakeSetup();
-            expect(scope.submitSurvey).toHaveBeenCalled();
-          
+            expect(scope.submitSurvey).toHaveBeenCalled();      
         })
 
         it('should not trigger submit survey when device is not shaken past threshold values', function() {
