@@ -22,15 +22,12 @@ describe("Controllers: AppCtrl", function() {
             this.on=  function(){
                 return true;
             }
-
             this.$add = function() {
                 return;
             }
-
             this.authWithOAuthPopup = function() {
                 return;
             }
-
             this.once = function() {
                 return;
             }
@@ -40,7 +37,7 @@ describe("Controllers: AppCtrl", function() {
     var successCallback = {
        then: function(modallogin){
             scope.modallogin = modallogin;
-
+            
             modallogin.hide = function(){};
         }
     };
@@ -67,11 +64,8 @@ describe("Controllers: AppCtrl", function() {
     })
 })
 
-
-// comment out line 215 in controllers.js and this test works
 describe('Controllers: FeedbackCtrl', function(){
     var scope;
-    var window;
     var ionicSlideBoxDelegate;
     var questions;
     var FeedbackCtrl;
@@ -82,14 +76,12 @@ describe('Controllers: FeedbackCtrl', function(){
         $Modal.fromTemplateUrl.and.returnValue(successCallback);
         $provide.value('$ionicModal', $Modal);
 
-        var  window = jasmine.createSpyObj('$window', ['navigator']);
-        window.navigator.and.returnValue(successCallback2);
-        $provide.value('$window', window);
 
         questions = jasmine.createSpyObj('Questions', ['all']);
         questions.all.and.returnValue(successCallback3);
         $provide.value('Questions', questions);
     }));
+       
 
     var successCallback = {
        then: function(modal){
@@ -97,26 +89,34 @@ describe('Controllers: FeedbackCtrl', function(){
         }
     };
 
-    var successCallback2 = {
-       then: function(acceleration){
-            scope.acceleration = acceleration;
-        }
-    };
-
     var successCallback3 = {
-       then: function() {
-        var questions = {
-            q1: 'Here is a test question'
-        }
-            return questions;
+        then: function() {
+            var questions = {
+                q1: 'Here is a test question',
+                q2: 'How are you',
+                q3: 'where are you from'
+            }
+        return questions;
         }
     };
 
-    beforeEach(inject(function($rootScope, $controller) {
-        scope = $rootScope.$new();
+    function onSuccess() {
+        var acceleration = { x: 12, y:13, z:14 };
+        return acceleration;
+    }
 
-        // window = jasmine.createSpyObj('window', ['navigator']);
-        // window.navigator.and.returnValue(successCallback2);
+
+    beforeEach(inject(function($rootScope, $controller, _$window_) {
+        scope = $rootScope.$new();
+        $window = _$window_;
+        
+        navigator = $window.navigator;
+        
+        $window.navigator = {
+            accelerometer: {
+                watchAcceleration : onSuccess
+            } 
+        };
 
         ionicSlideBoxDelegate = jasmine.createSpyObj('ionicSlideBoxDelegate', ['next', 'currentIndex', 'previous']);
 
@@ -128,9 +128,9 @@ describe('Controllers: FeedbackCtrl', function(){
         });
     }));
     
-    // it('can get an instance of my factory', inject(function(Friends) {
-    //     expect(Friends).toBeDefined();
-    // }));
+    it('can get an instance of my factory', inject(function(Questions) {
+        expect(Questions).toBeDefined();
+    }));
 
     // tests start here
     it('should have current rating to 5', function(){
@@ -143,20 +143,18 @@ describe('Controllers: FeedbackCtrl', function(){
     });
     
      it('should reflect ionicSlideBoxDelegate', function(){
-        // spyOn(scope, 'slideHasChanged');
         scope.next();
         scope.$apply();
-       expect(ionicSlideBoxDelegate.next).toHaveBeenCalled();
+        expect(ionicSlideBoxDelegate.next).toHaveBeenCalled();
 
         scope.previous();
         scope.$apply();
        expect(ionicSlideBoxDelegate.previous).toHaveBeenCalled();
     });
 
-    it('should reflect ionicSlideBoxDelegate', function(){
-        spyOn(scope, 'slideHasChanged');
+    it('start from question on slide 1', function(){
         scope.next();
         scope.$apply();
-       expect(scope.prev).toEqual(0);
+        expect(scope.prev).toEqual(0);
     });
 });
