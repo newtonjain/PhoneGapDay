@@ -11,8 +11,8 @@ exports.config = {
         app: 'sauce-storage:android-debug.apk',
         autoWebview: true,
         chromeOptions: {
-            androidActivity: "com.ionicframework.myapp.MainActivity",
-            androidPackage: "com.ionicframework.myapp"
+            androidActivity: "pheedback.pheedback.MainActivity",
+            androidPackage: "pheedback.pheedback"
         }
     },
     onPrepare: function() {

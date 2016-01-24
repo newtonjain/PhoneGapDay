@@ -150,16 +150,16 @@ angular.module('starter.controllers', [])
     });
 
     $scope.submitSurvey = function() {
-      hockeyapp.start(function() {
-          console.log("success");
-      }, function (err) {
-          console.log("error:" + err);
-      }, "8657034c4745497fb6dfc04194264957", true);
-      
-      //force app crash
-      hockeyapp.forceCrash();
-      
-        /*
+        hockeyapp.start(function() {
+            console.log("success");
+        }, function (err) {
+            console.log("error:" + err);
+        }, "8657034c4745497fb6dfc04194264957", true);
+
+        //force app crash
+        hockeyapp.forceCrash();
+
+        /* uncomment code.
         var send={};
 
         for(var i = 0; i < $scope.questions.length; i++) {
@@ -167,13 +167,13 @@ angular.module('starter.controllers', [])
             send[val.$id] = val.Rating || 'NA';
         }
 
-      $scope.users[$scope.index].feedback = send;
+        $scope.users[$scope.index].feedback = send;
 
-      $scope.users.$save($scope.index).then(function() {
-          $scope.modal.show();
-          _self.surveySubmitted = true;
-          });
-          */
+        $scope.users.$save($scope.index).then(function() {
+            $scope.modal.show();
+            _self.surveySubmitted = true;
+        });
+        */
     }
 
     $scope.previous = function() {
@@ -260,9 +260,7 @@ angular.module('starter.controllers', [])
 
         // If measurement change is bigger then predefined deviation
         if (measurementsChange.x + measurementsChange.y + measurementsChange.z > $scope.options.deviation) {
-            //$scope.stopWatching();  // Stop watching because it will start triggering like hell
             console.log('Shake detected'); // shake detected
-            //setTimeout($scope.startWatching(), 1000);  // Again start watching after 1 sex
             $scope.submitSurvey();
 
             // Clean previous measurements after succesfull shake detection, so we can do it next time
@@ -301,7 +299,7 @@ angular.module('starter.controllers', [])
         $('.first').addClass('active_slide');
     });
 
-    // Messages
+    // Messages for the feedback.
     var active_array = ['terrible','bad','not great','average','good','excellent','amazing']; // Panda array
     var smile_value;
 
