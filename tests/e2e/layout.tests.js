@@ -6,5 +6,12 @@ describe('Define your Suite', function() {
         
         var loginButton = element(by.id("login"));
         loginButton.click();
+        
+        // show the FB account screen
+        browser.driver.sleep(7000);
+        
+        // validate that the viewport is not null.
+        var viewport = element(by.id("viewport"));
+        expect(viewport).not.toBe(null);
     })
 });

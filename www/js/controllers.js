@@ -211,9 +211,13 @@ angular.module('starter.controllers', [])
             type = 'success';
         }
         
-        $scope.detectShake(acceleration); 
         $scope.type = type;
         $scope.$apply();
+        
+        if ($scope.prev == $scope.questions.length - 1)
+        {
+            $scope.detectShake(acceleration);
+        }
     }
 
     function onError() {

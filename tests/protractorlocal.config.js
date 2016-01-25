@@ -3,26 +3,16 @@ exports.config = {
 
     seleniumAddress:"http://localhost:4723/wd/hub",
     capabilities: {
-            // You can use other browsers
-            // like firefox, phantoms, safari, IE (-_-)
-            //'appium-version': '1.4.16',
-            browserName:'',
-            platformName: 'Android',
-            platformVersion: '4.4.2',
-            deviceName: 'Android Emulator',
-            app: '/Users/subhagpo/Desktop/Apps/PhoneGapDay/platforms/android/build/outputs/apk/android-debug.apk'
+            // Android device capabilities
+            app: '/Users/subhagpo/Desktop/Apps/PhoneGapDay/platforms/android/build/outputs/apk/android-debug.apk',
+            device: 'android',
+            'browserName': '',
+            'deviceName' : 'emulator-5554',
+            'platformName' : 'Android',
+            autoWebview: true,
     },
-    /*
-    baseUrl: 'http://localhost:8100',
-
-    capabilities: {
-            // You can use other browsers
-            // like firefox, phantoms, safari, IE (-_-)
-            browserName:'chrome'
-    },
-    */
     specs: [
-            // We are going to make this file in a minute
+        // actual test specs for e-2-e UI/Layout tests
         'e2e/*.tests.js'
     ],
     jasmineNodeOpts: {
@@ -31,11 +21,7 @@ exports.config = {
         isVerbose: true,
     },
     allScriptsTimeout: 20000,
-    
     onPrepare: function(){
-        /*
-        browser.driver.get('http://localhost:8100');
-        */
         var wd = require('wd'),
         protractor = require('protractor'),
         wdBridge = require('wd-bridge')(protractor, wd);
