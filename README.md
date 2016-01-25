@@ -1,4 +1,4 @@
-#PheedBacnk
+#PheedBack App
 
 PhoneGap day demo application that allows the users to participate in a survey using his/her mobile phone.
 The user signs in using his/her FaceBook account and provides ratings to the questions by moving the phone. 
@@ -15,18 +15,39 @@ the feedback, the user simply shakes the phone.
     * cordova-plugin-whitelist
     * cordova-plugin-inappbrowser
     * cordova-plugin-device-motion
-    * cordova-plugin-vibration
-    * cordova-plugin-code-push
+    * cordova-plugin-hockeyapp
+    * de.appplant.cordova.plugin.local-notification
 
 ## Building the application - 
  
  Once you enlist or sync to the git repo, remove all the previously added platforms and re-add them. This will also
- add the plugins since they are saved into the config.xml.
- Also run,
-* sudo npm install
-* bower install
+ add the plugins since they are saved into the config.xml. Now add the platform and build using Cordova, Ionic or TACO CLI as,
+    
+    cordova/ionic/taco build/run/emulate [platform]
+    
+ ## Unit Testing the application - 
  
-in the project root folder to get the package dependencies.
+ The app can be tested by running
  
-After getting all the plugins and dependencies, build the application using 
-*cordova build/run/emulate [platform]*
+    gulp [test]
+    
+ which runs the unit tests defined at <root>/tests/unit.
+ 
+  ## UI/Layout Testing the application - 
+  
+  To perform end to end layout testing, you would need to install the following pre-requisites
+  * Appium (npm install -g appium)
+  * Web-Driver (npm install -g wd) 
+  
+  
+  Once, installed you can run the UI tests running on the emulator/device. 
+  
+  * First run appium server,
+  
+    $ appium
+  
+  * Run the actual tests, by running protractor from the root of the project, as  
+  
+    $ node_modules/protractor/bin/protractor tests/protractorlocal.config.js
+  
+    
