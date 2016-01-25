@@ -1,17 +1,29 @@
-describe('Define your Suite', function() {  
- 
-    it('Define your Spec', function() {
-        // wait for the splash screen.
-        browser.driver.sleep(7000);
+describe('Pheedback App', function() {  
+    beforeEach(function() {
+      browser.get('http://localhost:8100/app.html#/tab/account');
+    });
+
+    describe('Facebook Auth Login', function() {
+        it('should correctly mock the FB login behaviour', function() {
+            var loginButton = element(by.id("login")),
+                viewport = element(by.id("viewport"));
         
-        var loginButton = element(by.id("login"));
-        loginButton.click();
-        
-        // show the FB account screen
-        browser.driver.sleep(7000);
-        
-        // validate that the viewport is not null.
-        var viewport = element(by.id("viewport"));
-        expect(viewport).not.toBe(null);
+            browser.driver.sleep(700);
+            loginButton.click();
+            
+            // validate that the viewport is not null.
+            expect(viewport).not.toBe(null);
+        })
+    })
+   
+    describe('Account Tab', function() {
+        it('should have the correct title', function() {
+           expect(browser.getTitle()).toEqual('Account');
+        });
+
+        it('should have no authData without authentication', function() {
+            var auth = element(by.binding('authData'));
+            expect(auth.getText()).toBe(''); 
+        });
     })
 });
