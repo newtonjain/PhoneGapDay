@@ -30,10 +30,6 @@
     "cordova-plugin-splashscreen",
     "com.ionic.keyboard"
   ],
-  "cordovaPlatforms": [
-    "ios",
-    "android"
-  ],
   "scripts": {
     "start": "node start.js"
   }

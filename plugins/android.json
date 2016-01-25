@@ -7,9 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-hockeyapp": {
-            "PACKAGE_NAME": "pheedback.pheedback"
-        },
         "code-push": {
             "PACKAGE_NAME": "pheedback.pheedback"
         },
@@ -32,6 +29,9 @@
             "PACKAGE_NAME": "pheedback.pheedback"
         },
         "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "pheedback.pheedback"
+        },
+        "cordova-plugin-hockeyapp": {
             "PACKAGE_NAME": "pheedback.pheedback"
         },
         "cordova-plugin-inappbrowser": {
